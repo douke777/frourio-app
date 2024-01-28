@@ -16,7 +16,7 @@
 
     /* Linting */
     "strict": true,
-    // "noUnusedLocals": true, // TODO:fix
+    "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
@@ -25,5 +25,6 @@
     }
   },
   "include": ["src"],
+  "exclude": ["node_modules"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

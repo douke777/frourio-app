@@ -1,13 +1,8 @@
 module.exports = {
   root: true,
   env: { browser: true, es2020: true },
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:react-hooks/recommended',
-    'prettier',
-  ],
-  ignorePatterns: ['dist', '.eslintrc.cjs', '*.config.js'],
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
+  ignorePatterns: ['.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2021,
@@ -15,7 +10,7 @@ module.exports = {
     project: ['./tsconfig.json'],
     tsconfigRootDir: __dirname,
   },
-  plugins: ['react-refresh', 'unused-imports', 'import'],
+  plugins: ['unused-imports', 'import', 'neverthrow'],
   settings: {
     'import/parsers': {
       '@typescript-eslint/parser': ['.ts', '.tsx'],
@@ -31,7 +26,7 @@ module.exports = {
     },
   },
   rules: {
-    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+    'neverthrow/must-use-result': 'error',
     '@typescript-eslint/no-unused-vars': 'off',
     'unused-imports/no-unused-imports': 'warn',
     semi: 'error',
@@ -55,19 +50,8 @@ module.exports = {
         pathGroupsExcludedImportTypes: ['builtin'],
         alphabetize: { order: 'asc', caseInsensitive: true },
         pathGroups: [
-          {
-            pattern: '{react,react-dom/**,react-router-dom}',
-            group: 'builtin',
-            position: 'before',
-          },
-          { pattern: '@/features/**', group: 'internal', position: 'before' },
-          { pattern: '@/stores/**', group: 'internal', position: 'before' },
-          { pattern: '@/lib/**', group: 'internal', position: 'before' },
-          { pattern: '@/utils/**', group: 'internal', position: 'before' },
-          { pattern: '@/hooks/**', group: 'internal', position: 'before' },
-          { pattern: '@/components/**', group: 'internal', position: 'before' },
-          { pattern: '@/config/**', group: 'internal', position: 'before' },
-          { pattern: './**.module.css', group: 'index', position: 'before' },
+          { pattern: 'api/**', group: 'internal', position: 'before' },
+          { pattern: 'lib/**', group: 'internal', position: 'before' },
         ],
       },
     ],
