@@ -1,2 +1,3 @@
 server/api/$api.ts
 server/$server.ts
+server/api/**/$relay.ts
