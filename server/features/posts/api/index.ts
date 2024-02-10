@@ -6,11 +6,11 @@ import { BadRequestError, Err, NotFoundError } from 'lib/error';
 import { handlePrismaError, prisma } from '../..';
 import { CreatingPost, EditingPost } from '../types';
 
-export function getPosts(authorId: User['id']): ResultAsync<Post[], Err> {
+export function getPosts(): ResultAsync<Post[], Err> {
   return ResultAsync.fromPromise(
     prisma.post.findMany({
       where: {
-        authorId,
+        published: true,
       },
       orderBy: {
         createdAt: 'desc',
@@ -20,12 +20,12 @@ export function getPosts(authorId: User['id']): ResultAsync<Post[], Err> {
   ).andThen((posts) => (posts.length ? okAsync(posts) : errAsync(new NotFoundError())));
 }
 
-export function getPostById(authorId: User['id'], postId: Post['id']): ResultAsync<Post, Err> {
+export function getPostById(postId: Post['id']): ResultAsync<Post, Err> {
   return ResultAsync.fromPromise(
     prisma.post.findUniqueOrThrow({
       where: {
-        authorId,
         id: postId,
+        published: true,
       },
     }),
     (e) => handlePrismaError(e),

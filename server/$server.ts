@@ -3,9 +3,12 @@ import type { ReadStream } from 'fs';
 import type { HttpStatusOk, AspidaMethodParams } from 'aspida';
 import type { Schema } from 'fast-json-stringify';
 import type { z } from 'zod';
+import validatorsFn_15if2po from 'api/posts/_postId/validators';
 import controllerFn_1qxyj9s from 'api/controller';
 import controllerFn_1c8eilo from 'api/hi/controller';
-import type { FastifyInstance, RouteHandlerMethod, preValidationHookHandler, onRequestHookHandler, preParsingHookHandler, preHandlerHookHandler } from 'fastify';
+import controllerFn_1fkamk4 from 'api/posts/controller';
+import controllerFn_badbgf from 'api/posts/_postId/controller';
+import type { FastifyInstance, RouteHandlerMethod, preValidationHookHandler, FastifySchema, FastifySchemaCompiler, onRequestHookHandler, preParsingHookHandler, preHandlerHookHandler } from 'fastify';
 
 export type FrourioOptions = {
   basePath?: string;
@@ -87,6 +90,11 @@ export type ServerMethodHandler<T extends AspidaMethodParams,  U extends Record<
   handler: ServerHandler<T, U> | ServerHandlerPromise<T, U>;
 };
 
+const validatorCompiler: FastifySchemaCompiler<FastifySchema> = ({ schema }) => (data: unknown) => {
+  const result = (schema as z.ZodType<unknown>).safeParse(data);
+  return result.success ? { value: result.data } : { error: result.error };
+};
+
 const methodToHandler = (
   methodCallback: ServerHandler<any, any>,
 ): RouteHandlerMethod => (req, reply) => {
@@ -97,14 +105,55 @@ const methodToHandler = (
   reply.code(data.status).send(data.body);
 };
 
+const asyncMethodToHandler = (
+  methodCallback: ServerHandlerPromise<any, any>,
+): RouteHandlerMethod => async (req, reply) => {
+  const data = await methodCallback(req as any) as any;
+
+  if (data.headers !== undefined) reply.headers(data.headers);
+
+  reply.code(data.status).send(data.body);
+};
+
 export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   const basePath = options.basePath ?? '';
+  const validators_15if2po = validatorsFn_15if2po(fastify);
   const controller_1qxyj9s = controllerFn_1qxyj9s(fastify);
   const controller_1c8eilo = controllerFn_1c8eilo(fastify);
+  const controller_1fkamk4 = controllerFn_1fkamk4(fastify);
+  const controller_badbgf = controllerFn_badbgf(fastify);
 
   fastify.get(basePath || '/', methodToHandler(controller_1qxyj9s.get));
 
   fastify.get(`${basePath}/hi`, methodToHandler(controller_1c8eilo.get));
+
+  fastify.get(`${basePath}/posts`, asyncMethodToHandler(controller_1fkamk4.get));
+
+  fastify.post(`${basePath}/posts`, asyncMethodToHandler(controller_1fkamk4.post));
+
+  fastify.get(`${basePath}/posts/:postId`,
+    {
+      schema: {
+        params: validators_15if2po.params,
+      },
+      validatorCompiler,
+    }, asyncMethodToHandler(controller_badbgf.get));
+
+  fastify.patch(`${basePath}/posts/:postId`,
+    {
+      schema: {
+        params: validators_15if2po.params,
+      },
+      validatorCompiler,
+    }, asyncMethodToHandler(controller_badbgf.patch));
+
+  fastify.delete(`${basePath}/posts/:postId`,
+    {
+      schema: {
+        params: validators_15if2po.params,
+      },
+      validatorCompiler,
+    }, asyncMethodToHandler(controller_badbgf.delete));
 
   return fastify;
 };
