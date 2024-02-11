@@ -6,6 +6,7 @@ import type { z } from 'zod';
 import validatorsFn_15if2po from 'api/posts/_postId/validators';
 import controllerFn_1qxyj9s from 'api/controller';
 import controllerFn_1c8eilo from 'api/hi/controller';
+import controllerFn_pcjixt from 'api/likes/controller';
 import controllerFn_1fkamk4 from 'api/posts/controller';
 import controllerFn_badbgf from 'api/posts/_postId/controller';
 import type { FastifyInstance, RouteHandlerMethod, preValidationHookHandler, FastifySchema, FastifySchemaCompiler, onRequestHookHandler, preParsingHookHandler, preHandlerHookHandler } from 'fastify';
@@ -90,6 +91,42 @@ export type ServerMethodHandler<T extends AspidaMethodParams,  U extends Record<
   handler: ServerHandler<T, U> | ServerHandlerPromise<T, U>;
 };
 
+const parseNumberTypeQueryParams = (numberTypeParams: [string, boolean, boolean][]): preValidationHookHandler => (req, reply, done) => {
+  const query: any = req.query;
+
+  for (const [key, isOptional, isArray] of numberTypeParams) {
+    const param = isArray ? (query[`${key}[]`] ?? query[key]) : query[key];
+
+    if (isArray) {
+      if (!isOptional && param === undefined) {
+        query[key] = [];
+      } else if (!isOptional || param !== undefined) {
+        const vals = (Array.isArray(param) ? param : [param]).map(Number);
+
+        if (vals.some(isNaN)) {
+          reply.code(400).send();
+          return;
+        }
+
+        query[key] = vals as any;
+      }
+
+      delete query[`${key}[]`];
+    } else if (!isOptional || param !== undefined) {
+      const val = Number(param);
+
+      if (isNaN(val)) {
+        reply.code(400).send();
+        return;
+      }
+
+      query[key] = val as any;
+    }
+  }
+
+  done();
+};
+
 const validatorCompiler: FastifySchemaCompiler<FastifySchema> = ({ schema }) => (data: unknown) => {
   const result = (schema as z.ZodType<unknown>).safeParse(data);
   return result.success ? { value: result.data } : { error: result.error };
@@ -120,12 +157,23 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   const validators_15if2po = validatorsFn_15if2po(fastify);
   const controller_1qxyj9s = controllerFn_1qxyj9s(fastify);
   const controller_1c8eilo = controllerFn_1c8eilo(fastify);
+  const controller_pcjixt = controllerFn_pcjixt(fastify);
   const controller_1fkamk4 = controllerFn_1fkamk4(fastify);
   const controller_badbgf = controllerFn_badbgf(fastify);
 
   fastify.get(basePath || '/', methodToHandler(controller_1qxyj9s.get));
 
   fastify.get(`${basePath}/hi`, methodToHandler(controller_1c8eilo.get));
+
+  fastify.get(
+    `${basePath}/likes`,
+    {
+      preValidation: parseNumberTypeQueryParams([['userId', false, false], ['postId', false, false]]),
+    },
+    asyncMethodToHandler(controller_pcjixt.get),
+  );
+
+  fastify.post(`${basePath}/likes`, asyncMethodToHandler(controller_pcjixt.post));
 
   fastify.get(`${basePath}/posts`, asyncMethodToHandler(controller_1fkamk4.get));
 
