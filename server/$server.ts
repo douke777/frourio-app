@@ -3,8 +3,11 @@ import type { ReadStream } from 'fs';
 import type { HttpStatusOk, AspidaMethodParams } from 'aspida';
 import type { Schema } from 'fast-json-stringify';
 import type { z } from 'zod';
+import validatorsFn_1ln2ulj from 'api/categories/_categoryId/validators';
 import validatorsFn_15if2po from 'api/posts/_postId/validators';
 import controllerFn_1qxyj9s from 'api/controller';
+import controllerFn_1qdo4lx from 'api/categories/controller';
+import controllerFn_1chl5mw from 'api/categories/_categoryId/controller';
 import controllerFn_1c8eilo from 'api/hi/controller';
 import controllerFn_pcjixt from 'api/likes/controller';
 import controllerFn_1fkamk4 from 'api/posts/controller';
@@ -156,8 +159,11 @@ const asyncMethodToHandler = (
 
 export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   const basePath = options.basePath ?? '';
+  const validators_1ln2ulj = validatorsFn_1ln2ulj(fastify);
   const validators_15if2po = validatorsFn_15if2po(fastify);
   const controller_1qxyj9s = controllerFn_1qxyj9s(fastify);
+  const controller_1qdo4lx = controllerFn_1qdo4lx(fastify);
+  const controller_1chl5mw = controllerFn_1chl5mw(fastify);
   const controller_1c8eilo = controllerFn_1c8eilo(fastify);
   const controller_pcjixt = controllerFn_pcjixt(fastify);
   const controller_1fkamk4 = controllerFn_1fkamk4(fastify);
@@ -166,6 +172,16 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   const controller_10b09sw = controllerFn_10b09sw(fastify);
 
   fastify.get(basePath || '/', methodToHandler(controller_1qxyj9s.get));
+
+  fastify.get(`${basePath}/categories`, asyncMethodToHandler(controller_1qdo4lx.get));
+
+  fastify.get(`${basePath}/categories/:categoryId`,
+    {
+      schema: {
+        params: validators_1ln2ulj.params,
+      },
+      validatorCompiler,
+    }, asyncMethodToHandler(controller_1chl5mw.get));
 
   fastify.get(`${basePath}/hi`, methodToHandler(controller_1c8eilo.get));
 
