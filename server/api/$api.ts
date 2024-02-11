@@ -5,12 +5,16 @@ import type { Methods as Methods_1yrd359 } from './hi';
 import type { Methods as Methods_1ft3bmu } from './likes';
 import type { Methods as Methods_1kz9onh } from './posts';
 import type { Methods as Methods_1bww5mg } from './posts/_postId';
+import type { Methods as Methods_1xhiioa } from './users';
+import type { Methods as Methods_1n5utkp } from './users/profiles';
 
 const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
   const prefix = (baseURL === undefined ? 'http://localhost:8888' : baseURL).replace(/\/$/, '');
   const PATH0 = '/hi';
   const PATH1 = '/likes';
   const PATH2 = '/posts';
+  const PATH3 = '/users';
+  const PATH4 = '/users/profiles';
   const GET = 'GET';
   const POST = 'POST';
   const DELETE = 'DELETE';
@@ -65,6 +69,20 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
       $post: (option: { body: Methods_1kz9onh['post']['reqBody'], config?: T | undefined }) =>
         fetch<Methods_1kz9onh['post']['resBody']>(prefix, PATH2, POST, option).json().then(r => r.body),
       $path: () => `${prefix}${PATH2}`,
+    },
+    users: {
+      profiles: {
+        post: (option: { body: Methods_1n5utkp['post']['reqBody'], config?: T | undefined }) =>
+          fetch(prefix, PATH4, POST, option).send(),
+        $post: (option: { body: Methods_1n5utkp['post']['reqBody'], config?: T | undefined }) =>
+          fetch(prefix, PATH4, POST, option).send().then(r => r.body),
+        $path: () => `${prefix}${PATH4}`,
+      },
+      get: (option?: { config?: T | undefined } | undefined) =>
+        fetch<Methods_1xhiioa['get']['resBody']>(prefix, PATH3, GET, option).text(),
+      $get: (option?: { config?: T | undefined } | undefined) =>
+        fetch<Methods_1xhiioa['get']['resBody']>(prefix, PATH3, GET, option).text().then(r => r.body),
+      $path: () => `${prefix}${PATH3}`,
     },
     get: (option?: { config?: T | undefined } | undefined) =>
       fetch<Methods_by08hd['get']['resBody']>(prefix, '', GET, option).json(),

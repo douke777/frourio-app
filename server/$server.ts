@@ -9,6 +9,8 @@ import controllerFn_1c8eilo from 'api/hi/controller';
 import controllerFn_pcjixt from 'api/likes/controller';
 import controllerFn_1fkamk4 from 'api/posts/controller';
 import controllerFn_badbgf from 'api/posts/_postId/controller';
+import controllerFn_1xegfg1 from 'api/users/controller';
+import controllerFn_10b09sw from 'api/users/profiles/controller';
 import type { FastifyInstance, RouteHandlerMethod, preValidationHookHandler, FastifySchema, FastifySchemaCompiler, onRequestHookHandler, preParsingHookHandler, preHandlerHookHandler } from 'fastify';
 
 export type FrourioOptions = {
@@ -160,6 +162,8 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   const controller_pcjixt = controllerFn_pcjixt(fastify);
   const controller_1fkamk4 = controllerFn_1fkamk4(fastify);
   const controller_badbgf = controllerFn_badbgf(fastify);
+  const controller_1xegfg1 = controllerFn_1xegfg1(fastify);
+  const controller_10b09sw = controllerFn_10b09sw(fastify);
 
   fastify.get(basePath || '/', methodToHandler(controller_1qxyj9s.get));
 
@@ -202,6 +206,10 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
       },
       validatorCompiler,
     }, asyncMethodToHandler(controller_badbgf.delete));
+
+  fastify.get(`${basePath}/users`, methodToHandler(controller_1xegfg1.get));
+
+  fastify.post(`${basePath}/users/profiles`, asyncMethodToHandler(controller_10b09sw.post));
 
   return fastify;
 };
