@@ -4,9 +4,7 @@
     "module": "commonjs",
     "baseUrl": ".",
     "paths": {
-      "api/*": ["api/*"],
-      "features/*": ["features/*"],
-      "lib/*": ["lib/*"]
+      "$/*": ["*"]
     }
   },
   "exclude": ["node_modules"],

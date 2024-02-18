@@ -1,10 +1,10 @@
 import { User } from '@prisma/client';
 import { ResultAsync } from 'neverthrow';
 
-import { Err } from 'lib/error';
-
 import { handlePrismaError, prisma } from '../..';
 import { CreatingUser, EditingUser } from '../types';
+
+import { Err } from '$/lib/error';
 
 export function getUserById(userId: User['id']): ResultAsync<User, Err> {
   return ResultAsync.fromPromise(

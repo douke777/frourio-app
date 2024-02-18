@@ -1,10 +1,10 @@
 import { User, Post } from '@prisma/client';
 import { ResultAsync, errAsync, okAsync } from 'neverthrow';
 
-import { BadRequestError, Err, NotFoundError } from 'lib/error';
-
 import { handlePrismaError, prisma } from '../..';
 import { CreatingPost, EditingPost } from '../types';
+
+import { BadRequestError, Err, NotFoundError } from '$/lib/error';
 
 export function getPosts(): ResultAsync<Post[], Err> {
   return ResultAsync.fromPromise(

@@ -1,6 +1,6 @@
-import { upsertProfile } from 'features/profiles/api';
-
 import { defineController } from './$relay';
+
+import { upsertProfile } from '$/features/profiles/api';
 
 export default defineController(() => ({
   post: ({ body: { userId, dto } }) => {

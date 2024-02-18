@@ -1,6 +1,6 @@
-import { getLike, toggleLike } from 'features/likes/api';
-
 import { defineController } from './$relay';
+
+import { getLike, toggleLike } from '$/features/likes/api';
 
 export default defineController(() => ({
   get: ({ query: { userId, postId } }) => {
