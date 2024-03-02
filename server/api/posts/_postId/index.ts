@@ -1,8 +1,8 @@
 import { Post, User } from '@prisma/client';
 
-import type { DefineMethods } from 'aspida';
+import { EditingPost } from '$/types/posts';
 
-import { EditingPost } from '$/features/posts/types';
+import type { DefineMethods } from 'aspida';
 
 export type Methods = DefineMethods<{
   get: {

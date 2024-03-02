@@ -1,9 +1,9 @@
 import { User, Post, Like, Prisma } from '@prisma/client';
 import { ResultAsync, errAsync, okAsync } from 'neverthrow';
 
-import { handlePrismaError, prisma } from '../..';
-
 import { Err, NotFoundError } from '$/lib/error';
+
+import { handlePrismaError, prisma } from '..';
 
 export function getLike(userId: User['id'], postId: Post['id']): ResultAsync<Like, Err> {
   return ResultAsync.fromPromise(

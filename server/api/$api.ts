@@ -8,6 +8,7 @@ import type { Methods as Methods_1ft3bmu } from './likes';
 import type { Methods as Methods_1kz9onh } from './posts';
 import type { Methods as Methods_1bww5mg } from './posts/_postId';
 import type { Methods as Methods_1xhiioa } from './users';
+import type { Methods as Methods_kyp39q } from './users/_userId';
 import type { Methods as Methods_1n5utkp } from './users/profiles';
 
 const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
@@ -92,6 +93,17 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
       $path: () => `${prefix}${PATH3}`,
     },
     users: {
+      _userId: (val1: number | string) => {
+        const prefix1 = `${PATH4}/${val1}`;
+
+        return {
+          get: (option?: { config?: T | undefined } | undefined) =>
+            fetch<Methods_kyp39q['get']['resBody']>(prefix, prefix1, GET, option).json(),
+          $get: (option?: { config?: T | undefined } | undefined) =>
+            fetch<Methods_kyp39q['get']['resBody']>(prefix, prefix1, GET, option).json().then(r => r.body),
+          $path: () => `${prefix}${prefix1}`,
+        };
+      },
       profiles: {
         post: (option: { body: Methods_1n5utkp['post']['reqBody'], config?: T | undefined }) =>
           fetch(prefix, PATH5, POST, option).send(),

@@ -1,10 +1,10 @@
 import { Profile, User } from '@prisma/client';
 import { ResultAsync } from 'neverthrow';
 
-import { handlePrismaError, prisma } from '../..';
-import { EditingProfile } from '../types';
-
 import { Err } from '$/lib/error';
+import { EditingProfile } from '$/types/profiles';
+
+import { handlePrismaError, prisma } from '..';
 
 export const upsertProfile = (
   userId: User['id'],

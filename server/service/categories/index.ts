@@ -1,9 +1,9 @@
 import { Category, Post, User } from '@prisma/client';
 import { ResultAsync, errAsync, okAsync } from 'neverthrow';
 
-import { handlePrismaError, prisma } from '../..';
-
 import { Err, NotFoundError } from '$/lib/error';
+
+import { handlePrismaError, prisma } from '..';
 
 export function getCategories(): ResultAsync<Category[], Err> {
   return ResultAsync.fromPromise(

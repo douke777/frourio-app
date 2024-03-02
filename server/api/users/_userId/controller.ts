@@ -1,13 +1,13 @@
-import { upsertProfile } from '$/service/profiles';
+import { getUserById } from '$/service/users';
 
 import { defineController } from './$relay';
 
 export default defineController(() => ({
-  post: ({ body: { userId, dto } }) => {
-    const result = upsertProfile(userId, dto);
+  get: ({ params: { userId } }) => {
+    const result = getUserById(Number(userId));
 
     return result.match(
-      () => ({ status: 200 }),
+      (user) => ({ status: 200, body: user }),
       (error) => {
         throw error;
       },

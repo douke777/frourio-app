@@ -1,6 +1,6 @@
-import { defineController } from './$relay';
+import { getCategoryById } from '$/service/categories';
 
-import { getCategoryById } from '$/features/categories/api';
+import { defineController } from './$relay';
 
 export default defineController(() => ({
   get: ({ params: { categoryId } }) => {

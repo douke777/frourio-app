@@ -1,6 +1,6 @@
-import { defineController } from './$relay';
+import { deletePost, getPostById, updatePost } from '$/service/posts';
 
-import { deletePost, getPostById, updatePost } from '$/features/posts/api';
+import { defineController } from './$relay';
 
 export default defineController(() => ({
   get: ({ params: { postId } }) => {

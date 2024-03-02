@@ -5,6 +5,7 @@ import type { Schema } from 'fast-json-stringify';
 import type { z } from 'zod';
 import validatorsFn_1ln2ulj from 'api/categories/_categoryId/validators';
 import validatorsFn_15if2po from 'api/posts/_postId/validators';
+import validatorsFn_1p3f06i from 'api/users/_userId/validators';
 import controllerFn_1qxyj9s from 'api/controller';
 import controllerFn_1qdo4lx from 'api/categories/controller';
 import controllerFn_1chl5mw from 'api/categories/_categoryId/controller';
@@ -14,6 +15,7 @@ import controllerFn_1fkamk4 from 'api/posts/controller';
 import controllerFn_badbgf from 'api/posts/_postId/controller';
 import controllerFn_1xegfg1 from 'api/users/controller';
 import controllerFn_10b09sw from 'api/users/profiles/controller';
+import controllerFn_15x3ppx from 'api/users/_userId/controller';
 import type { FastifyInstance, RouteHandlerMethod, preValidationHookHandler, FastifySchema, FastifySchemaCompiler, onRequestHookHandler, preParsingHookHandler, preHandlerHookHandler } from 'fastify';
 
 export type FrourioOptions = {
@@ -161,6 +163,7 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   const basePath = options.basePath ?? '';
   const validators_1ln2ulj = validatorsFn_1ln2ulj(fastify);
   const validators_15if2po = validatorsFn_15if2po(fastify);
+  const validators_1p3f06i = validatorsFn_1p3f06i(fastify);
   const controller_1qxyj9s = controllerFn_1qxyj9s(fastify);
   const controller_1qdo4lx = controllerFn_1qdo4lx(fastify);
   const controller_1chl5mw = controllerFn_1chl5mw(fastify);
@@ -170,6 +173,7 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   const controller_badbgf = controllerFn_badbgf(fastify);
   const controller_1xegfg1 = controllerFn_1xegfg1(fastify);
   const controller_10b09sw = controllerFn_10b09sw(fastify);
+  const controller_15x3ppx = controllerFn_15x3ppx(fastify);
 
   fastify.get(basePath || '/', methodToHandler(controller_1qxyj9s.get));
 
@@ -226,6 +230,14 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   fastify.get(`${basePath}/users`, methodToHandler(controller_1xegfg1.get));
 
   fastify.post(`${basePath}/users/profiles`, asyncMethodToHandler(controller_10b09sw.post));
+
+  fastify.get(`${basePath}/users/:userId`,
+    {
+      schema: {
+        params: validators_1p3f06i.params,
+      },
+      validatorCompiler,
+    }, asyncMethodToHandler(controller_15x3ppx.get));
 
   return fastify;
 };

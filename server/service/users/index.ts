@@ -1,10 +1,12 @@
 import { User } from '@prisma/client';
 import { ResultAsync } from 'neverthrow';
 
-import { handlePrismaError, prisma } from '../..';
-import { CreatingUser, EditingUser } from '../types';
-
 import { Err } from '$/lib/error';
+import { CreatingUser, EditingUser } from '$/types/users';
+
+import { handlePrismaError, prisma } from '..';
+
+// TODO: withProfileがいりそう
 
 export function getUserById(userId: User['id']): ResultAsync<User, Err> {
   return ResultAsync.fromPromise(
