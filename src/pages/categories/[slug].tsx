@@ -4,13 +4,13 @@ import { PaginatedPostList } from '@/features/posts/components/PaginatedList';
 
 import { CategoryTitle } from '@/components/Element/Category/CategoryTitle';
 
-const Home: FC = () => {
+const Categories: FC = () => {
   return (
     <>
-      <CategoryTitle category='New Arrival' />
+      <CategoryTitle />
       <PaginatedPostList />
     </>
   );
 };
 
-export default Home;
+export default Categories;
