@@ -6,7 +6,7 @@ import { CreatingUser, EditingUser } from '$/types/users';
 
 import { handlePrismaError, prisma } from '..';
 
-// TODO: withProfileがいりそう
+// TODO: passwordとかをomitする
 
 export function getUserById(userId: User['id']): ResultAsync<User, Err> {
   return ResultAsync.fromPromise(

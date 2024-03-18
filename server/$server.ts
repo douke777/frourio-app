@@ -12,9 +12,11 @@ import controllerFn_1chl5mw from 'api/categories/_categoryId/controller';
 import controllerFn_1c8eilo from 'api/hi/controller';
 import controllerFn_pcjixt from 'api/likes/controller';
 import controllerFn_1fkamk4 from 'api/posts/controller';
+import controllerFn_3izadp from 'api/posts/category/controller';
+import controllerFn_57a8rs from 'api/posts/related/controller';
 import controllerFn_badbgf from 'api/posts/_postId/controller';
+import controllerFn_xfo7hf from 'api/profiles/controller';
 import controllerFn_1xegfg1 from 'api/users/controller';
-import controllerFn_10b09sw from 'api/users/profiles/controller';
 import controllerFn_15x3ppx from 'api/users/_userId/controller';
 import type { FastifyInstance, RouteHandlerMethod, preValidationHookHandler, FastifySchema, FastifySchemaCompiler, onRequestHookHandler, preParsingHookHandler, preHandlerHookHandler } from 'fastify';
 
@@ -134,6 +136,9 @@ const parseNumberTypeQueryParams = (numberTypeParams: [string, boolean, boolean]
   done();
 };
 
+const callParserIfExistsQuery = (parser: OmitThisParameter<preValidationHookHandler>): preValidationHookHandler => (req, reply, done) =>
+  Object.keys(req.query as any).length ? parser(req, reply, done) : done();
+
 const validatorCompiler: FastifySchemaCompiler<FastifySchema> = ({ schema }) => (data: unknown) => {
   const result = (schema as z.ZodType<unknown>).safeParse(data);
   return result.success ? { value: result.data } : { error: result.error };
@@ -170,9 +175,11 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   const controller_1c8eilo = controllerFn_1c8eilo(fastify);
   const controller_pcjixt = controllerFn_pcjixt(fastify);
   const controller_1fkamk4 = controllerFn_1fkamk4(fastify);
+  const controller_3izadp = controllerFn_3izadp(fastify);
+  const controller_57a8rs = controllerFn_57a8rs(fastify);
   const controller_badbgf = controllerFn_badbgf(fastify);
+  const controller_xfo7hf = controllerFn_xfo7hf(fastify);
   const controller_1xegfg1 = controllerFn_1xegfg1(fastify);
-  const controller_10b09sw = controllerFn_10b09sw(fastify);
   const controller_15x3ppx = controllerFn_15x3ppx(fastify);
 
   fastify.get(basePath || '/', methodToHandler(controller_1qxyj9s.get));
@@ -203,6 +210,16 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
 
   fastify.post(`${basePath}/posts`, asyncMethodToHandler(controller_1fkamk4.post));
 
+  fastify.get(
+    `${basePath}/posts/category`,
+    {
+      preValidation: callParserIfExistsQuery(parseNumberTypeQueryParams([['limit', false, false]])),
+    },
+    methodToHandler(controller_3izadp.get),
+  );
+
+  fastify.get(`${basePath}/posts/related`, methodToHandler(controller_57a8rs.get));
+
   fastify.get(`${basePath}/posts/:postId`,
     {
       schema: {
@@ -227,9 +244,11 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
       validatorCompiler,
     }, asyncMethodToHandler(controller_badbgf.delete));
 
-  fastify.get(`${basePath}/users`, methodToHandler(controller_1xegfg1.get));
+  fastify.get(`${basePath}/profiles`, asyncMethodToHandler(controller_xfo7hf.get));
 
-  fastify.post(`${basePath}/users/profiles`, asyncMethodToHandler(controller_10b09sw.post));
+  fastify.post(`${basePath}/profiles`, asyncMethodToHandler(controller_xfo7hf.post));
+
+  fastify.get(`${basePath}/users`, methodToHandler(controller_1xegfg1.get));
 
   fastify.get(`${basePath}/users/:userId`,
     {

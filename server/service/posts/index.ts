@@ -2,23 +2,108 @@ import { User, Post } from '@prisma/client';
 import { ResultAsync, errAsync, okAsync } from 'neverthrow';
 
 import { BadRequestError, Err, NotFoundError } from '$/lib/error';
-import { CreatingPost, EditingPost } from '$/types/posts';
+import { CreatingPost, EditingPost, PostWithDetails } from '$/types/posts';
 
 import { handlePrismaError, prisma } from '..';
 
-export function getPosts(): ResultAsync<Post[], Err> {
+export function getNewPosts(): ResultAsync<PostWithDetails[], Err> {
   return ResultAsync.fromPromise(
     prisma.post.findMany({
       where: {
         published: true,
       },
+      take: 24,
       orderBy: {
-        createdAt: 'desc',
+        id: 'desc',
+      },
+      include: {
+        category: {
+          select: {
+            id: true,
+            slug: true,
+          },
+        },
+        author: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
       },
     }),
     (e) => handlePrismaError(e),
   ).andThen((posts) => (posts.length ? okAsync(posts) : errAsync(new NotFoundError())));
 }
+
+export function getPostsByCategory(
+  categorySlug: Post['categorySlug'],
+): ResultAsync<PostWithDetails[], Err> {
+  return ResultAsync.fromPromise(
+    prisma.post.findMany({
+      where: {
+        AND: [{ published: true }, { categorySlug }],
+      },
+      orderBy: {
+        id: 'desc',
+      },
+      include: {
+        category: {
+          select: {
+            id: true,
+            slug: true,
+          },
+        },
+        author: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+      },
+    }),
+    (e) => handlePrismaError(e),
+  ).andThen((posts) => (posts.length ? okAsync(posts) : errAsync(new NotFoundError())));
+}
+
+export function getRelatedPosts(
+  postId: Post['id'],
+  categorySlug: Post['categorySlug'],
+): ResultAsync<PostWithDetails[], Err> {
+  return ResultAsync.fromPromise(
+    prisma.post.findMany({
+      where: {
+        categorySlug,
+        NOT: {
+          id: postId,
+        },
+      },
+      take: 3,
+      orderBy: {
+        id: 'desc',
+      },
+      include: {
+        category: {
+          select: {
+            id: true,
+            slug: true,
+          },
+        },
+        author: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+      },
+    }),
+    (e) => handlePrismaError(e),
+  ).andThen((posts) => (posts.length ? okAsync(posts) : errAsync(new NotFoundError())));
+}
+
+// TODO: getPostsBySearch
 
 export function getPostById(postId: Post['id']): ResultAsync<Post, Err> {
   return ResultAsync.fromPromise(

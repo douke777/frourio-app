@@ -1,10 +1,10 @@
-import { createPost, getPosts } from '$/service/posts';
+import { createPost, getNewPosts } from '$/service/posts';
 
 import { defineController } from './$relay';
 
 export default defineController(() => ({
   get: () => {
-    const result = getPosts();
+    const result = getNewPosts();
 
     return result.match(
       (posts) => ({ status: 200, body: posts }),
