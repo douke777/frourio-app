@@ -2,7 +2,7 @@ import { User } from '@prisma/client';
 import { ResultAsync } from 'neverthrow';
 
 import { Err } from '$/lib/error';
-import { CreatingUser, EditingUser } from '$/types/users';
+import { CreatingUser } from '$/types/users';
 
 import { handlePrismaError, prisma } from '..';
 
@@ -30,7 +30,8 @@ export const createUser = (dto: CreatingUser): ResultAsync<User, Err> => {
   );
 };
 
-export function updateUser(userId: User['id'], dto: EditingUser): ResultAsync<User, Err> {
+// export function updateUser(userId: User['id'], dto: EditingUser): ResultAsync<User, Err> {
+export function updateUser(userId: User['id'], dto: { name: string }): ResultAsync<User, Err> {
   return ResultAsync.fromPromise(
     prisma.user.findUniqueOrThrow({
       where: {

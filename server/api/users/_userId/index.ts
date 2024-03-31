@@ -6,4 +6,10 @@ export type Methods = DefineMethods<{
   get: {
     resBody: User;
   };
+  patch: {
+    reqBody: {
+      // FIXME
+      name: string;
+    };
+  };
 }>;

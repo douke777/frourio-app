@@ -3,10 +3,19 @@ import type { ReadStream } from 'fs';
 import type { HttpStatusOk, AspidaMethodParams } from 'aspida';
 import type { Schema } from 'fast-json-stringify';
 import type { z } from 'zod';
+import hooksFn_1yps78r from 'api/auth/login/hooks';
+import hooksFn_17hl5xi from 'api/auth/logout/hooks';
+import hooksFn_162n5ob from 'api/likes/hooks';
+import hooksFn_17843s1 from 'api/profiles/hooks';
+import hooksFn_11zimof from 'api/users/_userId/hooks';
 import validatorsFn_1ln2ulj from 'api/categories/_categoryId/validators';
 import validatorsFn_15if2po from 'api/posts/_postId/validators';
 import validatorsFn_1p3f06i from 'api/users/_userId/validators';
 import controllerFn_1qxyj9s from 'api/controller';
+import controllerFn_8myref from 'api/auth/controller';
+import controllerFn_q9g69d from 'api/auth/login/controller';
+import controllerFn_18yti from 'api/auth/logout/controller';
+import controllerFn_wrryh8 from 'api/auth/signup/controller';
 import controllerFn_1qdo4lx from 'api/categories/controller';
 import controllerFn_1chl5mw from 'api/categories/_categoryId/controller';
 import controllerFn_1c8eilo from 'api/hi/controller';
@@ -18,7 +27,7 @@ import controllerFn_badbgf from 'api/posts/_postId/controller';
 import controllerFn_xfo7hf from 'api/profiles/controller';
 import controllerFn_1xegfg1 from 'api/users/controller';
 import controllerFn_15x3ppx from 'api/users/_userId/controller';
-import type { FastifyInstance, RouteHandlerMethod, preValidationHookHandler, FastifySchema, FastifySchemaCompiler, onRequestHookHandler, preParsingHookHandler, preHandlerHookHandler } from 'fastify';
+import type { FastifyInstance, RouteHandlerMethod, preValidationHookHandler, FastifySchema, FastifySchemaCompiler, RouteShorthandOptions, onRequestHookHandler, preParsingHookHandler, preHandlerHookHandler } from 'fastify';
 
 export type FrourioOptions = {
   basePath?: string;
@@ -166,10 +175,19 @@ const asyncMethodToHandler = (
 
 export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   const basePath = options.basePath ?? '';
+  const hooks_1yps78r = hooksFn_1yps78r(fastify);
+  const hooks_17hl5xi = hooksFn_17hl5xi(fastify);
+  const hooks_162n5ob = hooksFn_162n5ob(fastify);
+  const hooks_17843s1 = hooksFn_17843s1(fastify);
+  const hooks_11zimof = hooksFn_11zimof(fastify);
   const validators_1ln2ulj = validatorsFn_1ln2ulj(fastify);
   const validators_15if2po = validatorsFn_15if2po(fastify);
   const validators_1p3f06i = validatorsFn_1p3f06i(fastify);
   const controller_1qxyj9s = controllerFn_1qxyj9s(fastify);
+  const controller_8myref = controllerFn_8myref(fastify);
+  const controller_q9g69d = controllerFn_q9g69d(fastify);
+  const controller_18yti = controllerFn_18yti(fastify);
+  const controller_wrryh8 = controllerFn_wrryh8(fastify);
   const controller_1qdo4lx = controllerFn_1qdo4lx(fastify);
   const controller_1chl5mw = controllerFn_1chl5mw(fastify);
   const controller_1c8eilo = controllerFn_1c8eilo(fastify);
@@ -183,6 +201,26 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   const controller_15x3ppx = controllerFn_15x3ppx(fastify);
 
   fastify.get(basePath || '/', methodToHandler(controller_1qxyj9s.get));
+
+  fastify.get(`${basePath}/auth`, methodToHandler(controller_8myref.get));
+
+  fastify.post(
+    `${basePath}/auth/login`,
+    {
+      preHandler: hooks_1yps78r.preHandler,
+    } as RouteShorthandOptions,
+    methodToHandler(controller_q9g69d.post),
+  );
+
+  fastify.post(
+    `${basePath}/auth/logout`,
+    {
+      preHandler: hooks_17hl5xi.preHandler,
+    },
+    methodToHandler(controller_18yti.post),
+  );
+
+  fastify.post(`${basePath}/auth/signup`, asyncMethodToHandler(controller_wrryh8.post));
 
   fastify.get(`${basePath}/categories`, asyncMethodToHandler(controller_1qdo4lx.get));
 
@@ -199,16 +237,29 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   fastify.get(
     `${basePath}/likes`,
     {
+      onRequest: hooks_162n5ob.onRequest,
       preValidation: parseNumberTypeQueryParams([['userId', false, false], ['postId', false, false]]),
-    },
+    } as RouteShorthandOptions,
     asyncMethodToHandler(controller_pcjixt.get),
   );
 
-  fastify.post(`${basePath}/likes`, asyncMethodToHandler(controller_pcjixt.post));
+  fastify.post(
+    `${basePath}/likes`,
+    {
+      onRequest: hooks_162n5ob.onRequest,
+    } as RouteShorthandOptions,
+    asyncMethodToHandler(controller_pcjixt.post),
+  );
 
   fastify.get(`${basePath}/posts`, asyncMethodToHandler(controller_1fkamk4.get));
 
-  fastify.post(`${basePath}/posts`, asyncMethodToHandler(controller_1fkamk4.post));
+  fastify.post(
+    `${basePath}/posts`,
+    {
+      onRequest: controller_1fkamk4.post.hooks.onRequest,
+    } as RouteShorthandOptions,
+    asyncMethodToHandler(controller_1fkamk4.post.handler),
+  );
 
   fastify.get(
     `${basePath}/posts/category`,
@@ -226,37 +277,73 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
         params: validators_15if2po.params,
       },
       validatorCompiler,
-    }, asyncMethodToHandler(controller_badbgf.get));
+    } as RouteShorthandOptions, asyncMethodToHandler(controller_badbgf.get));
 
-  fastify.patch(`${basePath}/posts/:postId`,
+  fastify.patch(
+    `${basePath}/posts/:postId`,
     {
       schema: {
         params: validators_15if2po.params,
       },
       validatorCompiler,
-    }, asyncMethodToHandler(controller_badbgf.patch));
+      preHandler: controller_badbgf.patch.hooks.preHandler,
+    } as RouteShorthandOptions,
+    asyncMethodToHandler(controller_badbgf.patch.handler),
+  );
 
-  fastify.delete(`${basePath}/posts/:postId`,
+  fastify.delete(
+    `${basePath}/posts/:postId`,
     {
       schema: {
         params: validators_15if2po.params,
       },
       validatorCompiler,
-    }, asyncMethodToHandler(controller_badbgf.delete));
+      preHandler: controller_badbgf.delete.hooks.preHandler,
+    } as RouteShorthandOptions,
+    asyncMethodToHandler(controller_badbgf.delete.handler),
+  );
 
-  fastify.get(`${basePath}/profiles`, asyncMethodToHandler(controller_xfo7hf.get));
+  fastify.get(
+    `${basePath}/profiles`,
+    {
+      onRequest: hooks_17843s1.onRequest,
+    } as RouteShorthandOptions,
+    asyncMethodToHandler(controller_xfo7hf.get),
+  );
 
-  fastify.post(`${basePath}/profiles`, asyncMethodToHandler(controller_xfo7hf.post));
+  fastify.post(
+    `${basePath}/profiles`,
+    {
+      onRequest: hooks_17843s1.onRequest,
+    } as RouteShorthandOptions,
+    asyncMethodToHandler(controller_xfo7hf.post),
+  );
 
   fastify.get(`${basePath}/users`, methodToHandler(controller_1xegfg1.get));
 
-  fastify.get(`${basePath}/users/:userId`,
+  fastify.get(
+    `${basePath}/users/:userId`,
     {
       schema: {
         params: validators_1p3f06i.params,
       },
       validatorCompiler,
-    }, asyncMethodToHandler(controller_15x3ppx.get));
+      onRequest: hooks_11zimof.onRequest,
+    } as RouteShorthandOptions,
+    asyncMethodToHandler(controller_15x3ppx.get),
+  );
+
+  fastify.patch(
+    `${basePath}/users/:userId`,
+    {
+      schema: {
+        params: validators_1p3f06i.params,
+      },
+      validatorCompiler,
+      onRequest: hooks_11zimof.onRequest,
+    } as RouteShorthandOptions,
+    asyncMethodToHandler(controller_15x3ppx.patch),
+  );
 
   return fastify;
 };

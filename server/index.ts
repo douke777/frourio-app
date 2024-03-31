@@ -1,4 +1,6 @@
+import fastifyCookie from '@fastify/cookie';
 import fastifyCors from '@fastify/cors';
+import fastifyJwt from '@fastify/jwt';
 import fastify from 'fastify';
 
 import server from './$server';
@@ -17,6 +19,14 @@ const app = fastify({
 });
 
 app.register(fastifyCors, {});
+app.register(fastifyJwt, {
+  secret: 'mSSS9Zrd',
+  cookie: {
+    cookieName: 'access_token',
+    signed: false,
+  },
+});
+app.register(fastifyCookie);
 
 server(app);
 

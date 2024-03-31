@@ -1,6 +1,12 @@
+import { verifyJwtToken } from '$/service/auth';
 import { createPost, getNewPosts } from '$/service/posts';
+import { JwtPayload } from '$/types/auth';
 
 import { defineController } from './$relay';
+
+export type AdditionalRequest = {
+  user: JwtPayload;
+};
 
 export default defineController(() => ({
   get: () => {
@@ -13,14 +19,20 @@ export default defineController(() => ({
       },
     );
   },
-  post: ({ body: { authorId, dto } }) => {
-    const result = createPost(authorId, dto);
+  post: {
+    hooks: {
+      onRequest: verifyJwtToken,
+    },
+    handler: ({ body, user }) => {
+      const authorId = user.sub;
+      const result = createPost(authorId, body);
 
-    return result.match(
-      (post) => ({ status: 201, body: post }),
-      (error) => {
-        throw error;
-      },
-    );
+      return result.match(
+        (post) => ({ status: 201, body: post }),
+        (error) => {
+          throw error;
+        },
+      );
+    },
   },
 }));

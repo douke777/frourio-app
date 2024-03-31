@@ -1,4 +1,4 @@
-import { Post, User } from '@prisma/client';
+import { Post } from '@prisma/client';
 
 import { CreatingPost } from '$/types/posts';
 
@@ -9,7 +9,7 @@ export type Methods = DefineMethods<{
     resBody: Post[];
   };
   post: {
-    reqBody: { authorId: User['id']; dto: CreatingPost };
+    reqBody: CreatingPost;
     resBody: Post;
   };
 }>;

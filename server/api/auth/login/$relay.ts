@@ -4,7 +4,7 @@ import { z } from 'zod';
 import type { Injectable } from 'velona';
 import type { MultipartFile } from '@fastify/multipart';
 import type { FastifyInstance } from 'fastify';
-import type { ServerHooks, ServerMethodHandler } from '../../$server';
+import type { ServerHooks, ServerMethodHandler } from '../../../$server';
 import type { AdditionalRequest } from './hooks';
 import type { Methods } from './';
 

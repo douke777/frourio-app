@@ -1,4 +1,4 @@
-import { Post, User } from '@prisma/client';
+import { Post } from '@prisma/client';
 
 import { EditingPost } from '$/types/posts';
 
@@ -9,9 +9,7 @@ export type Methods = DefineMethods<{
     resBody: Post;
   };
   patch: {
-    reqBody: { authorId: User['id']; dto: Omit<EditingPost, 'id'> };
+    reqBody: Omit<EditingPost, 'id'>;
   };
-  delete: {
-    reqBody: { authorId: User['id'] };
-  };
+  delete: {};
 }>;

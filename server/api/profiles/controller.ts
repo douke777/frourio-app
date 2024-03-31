@@ -3,9 +3,8 @@ import { getUserWithProfile, upsertProfile } from '$/service/profiles';
 import { defineController } from './$relay';
 
 export default defineController(() => ({
-  get: () => {
-    // FIXME: sessionからuserIdを取得
-    const userId = 1;
+  get: ({ user }) => {
+    const userId = user.sub;
     const result = getUserWithProfile(userId);
 
     return result.match(
@@ -15,9 +14,8 @@ export default defineController(() => ({
       },
     );
   },
-  post: ({ body }) => {
-    // FIXME: sessionからuserIdを取得
-    const userId = 1;
+  post: ({ body, user }) => {
+    const userId = user.sub;
     const result = upsertProfile(userId, body);
 
     return result.match(

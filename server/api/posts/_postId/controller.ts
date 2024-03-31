@@ -1,6 +1,12 @@
+import { verifyJwtToken } from '$/service/auth';
 import { deletePost, getPostById, updatePost } from '$/service/posts';
+import { JwtPayload } from '$/types/auth';
 
 import { defineController } from './$relay';
+
+export type AdditionalRequest = {
+  user: JwtPayload;
+};
 
 export default defineController(() => ({
   get: ({ params: { postId } }) => {
@@ -13,24 +19,36 @@ export default defineController(() => ({
       },
     );
   },
-  patch: ({ params: { postId }, body: { authorId, dto } }) => {
-    const result = updatePost(authorId, Number(postId), dto);
+  patch: {
+    hooks: {
+      preHandler: verifyJwtToken,
+    },
+    handler: ({ params: { postId }, body, user }) => {
+      const authorId = user.sub;
+      const result = updatePost(authorId, Number(postId), body);
 
-    return result.match(
-      () => ({ status: 200 }),
-      (error) => {
-        throw error;
-      },
-    );
+      return result.match(
+        () => ({ status: 200 }),
+        (error) => {
+          throw error;
+        },
+      );
+    },
   },
-  delete: ({ params: { postId }, body: { authorId } }) => {
-    const result = deletePost(authorId, Number(postId));
+  delete: {
+    hooks: {
+      preHandler: verifyJwtToken,
+    },
+    handler: ({ params: { postId }, user }) => {
+      const authorId = user.sub;
+      const result = deletePost(authorId, Number(postId));
 
-    return result.match(
-      () => ({ status: 204 }),
-      (error) => {
-        throw error;
-      },
-    );
+      return result.match(
+        () => ({ status: 204 }),
+        (error) => {
+          throw error;
+        },
+      );
+    },
   },
 }));

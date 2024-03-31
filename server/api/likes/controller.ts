@@ -3,7 +3,8 @@ import { getLike, toggleLike } from '$/service/likes';
 import { defineController } from './$relay';
 
 export default defineController(() => ({
-  get: ({ query: { userId, postId } }) => {
+  get: ({ query: { postId }, user }) => {
+    const userId = user.sub;
     const result = getLike(userId, postId);
 
     return result.match(
@@ -13,7 +14,8 @@ export default defineController(() => ({
       },
     );
   },
-  post: ({ body: { userId, postId } }) => {
+  post: ({ body: { postId }, user }) => {
+    const userId = user.sub;
     const result = toggleLike(userId, postId);
 
     return result.match(
