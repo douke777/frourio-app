@@ -3,7 +3,18 @@ import fastify from 'fastify';
 
 import server from './$server';
 
-const app = fastify();
+const app = fastify({
+  logger: {
+    transport: {
+      target: 'pino-pretty',
+      options: {
+        translateTime: true,
+        ignore: 'pid,hostname,reqId,responseTime,req,res',
+        messageFormat: '{msg} [id={reqId} {req.method} {req.url}]',
+      },
+    },
+  },
+});
 
 app.register(fastifyCors, {});
 
