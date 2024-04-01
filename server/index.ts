@@ -1,5 +1,6 @@
 import fastifyCookie from '@fastify/cookie';
 import fastifyCors from '@fastify/cors';
+import fastifyCsrf from '@fastify/csrf-protection';
 import fastifyJwt from '@fastify/jwt';
 import fastify from 'fastify';
 
@@ -27,6 +28,13 @@ app.register(fastifyJwt, {
   },
 });
 app.register(fastifyCookie);
+app.register(fastifyCsrf, {
+  cookieOpts: {
+    httpOnly: true,
+    sameSite: 'none',
+    secure: false, // TODO: true
+  },
+});
 
 server(app);
 

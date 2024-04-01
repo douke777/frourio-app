@@ -3,6 +3,8 @@ import type { ReadStream } from 'fs';
 import type { HttpStatusOk, AspidaMethodParams } from 'aspida';
 import type { Schema } from 'fast-json-stringify';
 import type { z } from 'zod';
+import hooksFn_1m6qgto from 'api/hooks';
+import hooksFn_80ncp2 from 'api/auth/csrf/hooks';
 import hooksFn_1yps78r from 'api/auth/login/hooks';
 import hooksFn_17hl5xi from 'api/auth/logout/hooks';
 import hooksFn_162n5ob from 'api/likes/hooks';
@@ -13,6 +15,7 @@ import validatorsFn_15if2po from 'api/posts/_postId/validators';
 import validatorsFn_1p3f06i from 'api/users/_userId/validators';
 import controllerFn_1qxyj9s from 'api/controller';
 import controllerFn_8myref from 'api/auth/controller';
+import controllerFn_1n5xz46 from 'api/auth/csrf/controller';
 import controllerFn_q9g69d from 'api/auth/login/controller';
 import controllerFn_18yti from 'api/auth/logout/controller';
 import controllerFn_wrryh8 from 'api/auth/signup/controller';
@@ -175,6 +178,8 @@ const asyncMethodToHandler = (
 
 export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   const basePath = options.basePath ?? '';
+  const hooks_1m6qgto = hooksFn_1m6qgto(fastify);
+  const hooks_80ncp2 = hooksFn_80ncp2(fastify);
   const hooks_1yps78r = hooksFn_1yps78r(fastify);
   const hooks_17hl5xi = hooksFn_17hl5xi(fastify);
   const hooks_162n5ob = hooksFn_162n5ob(fastify);
@@ -185,6 +190,7 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   const validators_1p3f06i = validatorsFn_1p3f06i(fastify);
   const controller_1qxyj9s = controllerFn_1qxyj9s(fastify);
   const controller_8myref = controllerFn_8myref(fastify);
+  const controller_1n5xz46 = controllerFn_1n5xz46(fastify);
   const controller_q9g69d = controllerFn_q9g69d(fastify);
   const controller_18yti = controllerFn_18yti(fastify);
   const controller_wrryh8 = controllerFn_wrryh8(fastify);
@@ -200,13 +206,35 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   const controller_1xegfg1 = controllerFn_1xegfg1(fastify);
   const controller_15x3ppx = controllerFn_15x3ppx(fastify);
 
-  fastify.get(basePath || '/', methodToHandler(controller_1qxyj9s.get));
+  fastify.get(
+    basePath || '/',
+    {
+      onRequest: hooks_1m6qgto.onRequest,
+    },
+    methodToHandler(controller_1qxyj9s.get),
+  );
 
-  fastify.get(`${basePath}/auth`, methodToHandler(controller_8myref.get));
+  fastify.get(
+    `${basePath}/auth`,
+    {
+      onRequest: hooks_1m6qgto.onRequest,
+    },
+    methodToHandler(controller_8myref.get),
+  );
+
+  fastify.get(
+    `${basePath}/auth/csrf`,
+    {
+      onRequest: hooks_1m6qgto.onRequest,
+      preHandler: hooks_80ncp2.preHandler,
+    } as RouteShorthandOptions,
+    methodToHandler(controller_1n5xz46.get),
+  );
 
   fastify.post(
     `${basePath}/auth/login`,
     {
+      onRequest: hooks_1m6qgto.onRequest,
       preHandler: hooks_1yps78r.preHandler,
     } as RouteShorthandOptions,
     methodToHandler(controller_q9g69d.post),
@@ -215,29 +243,52 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   fastify.post(
     `${basePath}/auth/logout`,
     {
+      onRequest: hooks_1m6qgto.onRequest,
       preHandler: hooks_17hl5xi.preHandler,
     },
     methodToHandler(controller_18yti.post),
   );
 
-  fastify.post(`${basePath}/auth/signup`, asyncMethodToHandler(controller_wrryh8.post));
+  fastify.post(
+    `${basePath}/auth/signup`,
+    {
+      onRequest: hooks_1m6qgto.onRequest,
+    },
+    asyncMethodToHandler(controller_wrryh8.post),
+  );
 
-  fastify.get(`${basePath}/categories`, asyncMethodToHandler(controller_1qdo4lx.get));
+  fastify.get(
+    `${basePath}/categories`,
+    {
+      onRequest: hooks_1m6qgto.onRequest,
+    },
+    asyncMethodToHandler(controller_1qdo4lx.get),
+  );
 
-  fastify.get(`${basePath}/categories/:categoryId`,
+  fastify.get(
+    `${basePath}/categories/:categoryId`,
     {
       schema: {
         params: validators_1ln2ulj.params,
       },
       validatorCompiler,
-    }, asyncMethodToHandler(controller_1chl5mw.get));
+      onRequest: hooks_1m6qgto.onRequest,
+    },
+    asyncMethodToHandler(controller_1chl5mw.get),
+  );
 
-  fastify.get(`${basePath}/hi`, methodToHandler(controller_1c8eilo.get));
+  fastify.get(
+    `${basePath}/hi`,
+    {
+      onRequest: hooks_1m6qgto.onRequest,
+    },
+    methodToHandler(controller_1c8eilo.get),
+  );
 
   fastify.get(
     `${basePath}/likes`,
     {
-      onRequest: hooks_162n5ob.onRequest,
+      onRequest: [hooks_1m6qgto.onRequest, hooks_162n5ob.onRequest],
       preValidation: parseNumberTypeQueryParams([['userId', false, false], ['postId', false, false]]),
     } as RouteShorthandOptions,
     asyncMethodToHandler(controller_pcjixt.get),
@@ -246,17 +297,23 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   fastify.post(
     `${basePath}/likes`,
     {
-      onRequest: hooks_162n5ob.onRequest,
+      onRequest: [hooks_1m6qgto.onRequest, hooks_162n5ob.onRequest],
     } as RouteShorthandOptions,
     asyncMethodToHandler(controller_pcjixt.post),
   );
 
-  fastify.get(`${basePath}/posts`, asyncMethodToHandler(controller_1fkamk4.get));
+  fastify.get(
+    `${basePath}/posts`,
+    {
+      onRequest: hooks_1m6qgto.onRequest,
+    } as RouteShorthandOptions,
+    asyncMethodToHandler(controller_1fkamk4.get),
+  );
 
   fastify.post(
     `${basePath}/posts`,
     {
-      onRequest: controller_1fkamk4.post.hooks.onRequest,
+      onRequest: [hooks_1m6qgto.onRequest, controller_1fkamk4.post.hooks.onRequest],
     } as RouteShorthandOptions,
     asyncMethodToHandler(controller_1fkamk4.post.handler),
   );
@@ -264,20 +321,31 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   fastify.get(
     `${basePath}/posts/category`,
     {
+      onRequest: hooks_1m6qgto.onRequest,
       preValidation: callParserIfExistsQuery(parseNumberTypeQueryParams([['limit', false, false]])),
     },
     methodToHandler(controller_3izadp.get),
   );
 
-  fastify.get(`${basePath}/posts/related`, methodToHandler(controller_57a8rs.get));
+  fastify.get(
+    `${basePath}/posts/related`,
+    {
+      onRequest: hooks_1m6qgto.onRequest,
+    },
+    methodToHandler(controller_57a8rs.get),
+  );
 
-  fastify.get(`${basePath}/posts/:postId`,
+  fastify.get(
+    `${basePath}/posts/:postId`,
     {
       schema: {
         params: validators_15if2po.params,
       },
       validatorCompiler,
-    } as RouteShorthandOptions, asyncMethodToHandler(controller_badbgf.get));
+      onRequest: hooks_1m6qgto.onRequest,
+    } as RouteShorthandOptions,
+    asyncMethodToHandler(controller_badbgf.get),
+  );
 
   fastify.patch(
     `${basePath}/posts/:postId`,
@@ -286,6 +354,7 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
         params: validators_15if2po.params,
       },
       validatorCompiler,
+      onRequest: hooks_1m6qgto.onRequest,
       preHandler: controller_badbgf.patch.hooks.preHandler,
     } as RouteShorthandOptions,
     asyncMethodToHandler(controller_badbgf.patch.handler),
@@ -298,6 +367,7 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
         params: validators_15if2po.params,
       },
       validatorCompiler,
+      onRequest: hooks_1m6qgto.onRequest,
       preHandler: controller_badbgf.delete.hooks.preHandler,
     } as RouteShorthandOptions,
     asyncMethodToHandler(controller_badbgf.delete.handler),
@@ -306,7 +376,7 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   fastify.get(
     `${basePath}/profiles`,
     {
-      onRequest: hooks_17843s1.onRequest,
+      onRequest: [hooks_1m6qgto.onRequest, hooks_17843s1.onRequest],
     } as RouteShorthandOptions,
     asyncMethodToHandler(controller_xfo7hf.get),
   );
@@ -314,12 +384,18 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   fastify.post(
     `${basePath}/profiles`,
     {
-      onRequest: hooks_17843s1.onRequest,
+      onRequest: [hooks_1m6qgto.onRequest, hooks_17843s1.onRequest],
     } as RouteShorthandOptions,
     asyncMethodToHandler(controller_xfo7hf.post),
   );
 
-  fastify.get(`${basePath}/users`, methodToHandler(controller_1xegfg1.get));
+  fastify.get(
+    `${basePath}/users`,
+    {
+      onRequest: hooks_1m6qgto.onRequest,
+    },
+    methodToHandler(controller_1xegfg1.get),
+  );
 
   fastify.get(
     `${basePath}/users/:userId`,
@@ -328,7 +404,7 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
         params: validators_1p3f06i.params,
       },
       validatorCompiler,
-      onRequest: hooks_11zimof.onRequest,
+      onRequest: [hooks_1m6qgto.onRequest, hooks_11zimof.onRequest],
     } as RouteShorthandOptions,
     asyncMethodToHandler(controller_15x3ppx.get),
   );
@@ -340,7 +416,7 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
         params: validators_1p3f06i.params,
       },
       validatorCompiler,
-      onRequest: hooks_11zimof.onRequest,
+      onRequest: [hooks_1m6qgto.onRequest, hooks_11zimof.onRequest],
     } as RouteShorthandOptions,
     asyncMethodToHandler(controller_15x3ppx.patch),
   );
