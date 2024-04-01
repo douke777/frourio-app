@@ -1,3 +1,4 @@
+import { prisma } from '$/service';
 import { verifyJwtToken } from '$/service/auth';
 import { deletePost, getPostById, updatePost } from '$/service/posts';
 import { JwtPayload } from '$/types/auth';
@@ -10,7 +11,7 @@ export type AdditionalRequest = {
 
 export default defineController(() => ({
   get: ({ params: { postId } }) => {
-    const result = getPostById(Number(postId));
+    const result = getPostById(prisma)(Number(postId));
 
     return result.match(
       (post) => ({ status: 200, body: post }),
@@ -25,7 +26,7 @@ export default defineController(() => ({
     },
     handler: ({ params: { postId }, body, user }) => {
       const authorId = user.sub;
-      const result = updatePost(authorId, Number(postId), body);
+      const result = updatePost(prisma)(authorId, Number(postId), body);
 
       return result.match(
         () => ({ status: 200 }),
@@ -41,7 +42,7 @@ export default defineController(() => ({
     },
     handler: ({ params: { postId }, user }) => {
       const authorId = user.sub;
-      const result = deletePost(authorId, Number(postId));
+      const result = deletePost(prisma)(authorId, Number(postId));
 
       return result.match(
         () => ({ status: 204 }),

@@ -1,10 +1,11 @@
+import { prisma } from '$/service';
 import { getUserById, updateUser } from '$/service/users';
 
 import { defineController } from './$relay';
 
 export default defineController(() => ({
   get: ({ params: { userId } }) => {
-    const result = getUserById(Number(userId));
+    const result = getUserById(prisma)(Number(userId));
 
     return result.match(
       (user) => ({ status: 200, body: user }),
@@ -18,7 +19,7 @@ export default defineController(() => ({
     console.log('userId:', userId);
     console.log('dto:', body);
 
-    const result = updateUser(Number(userId), body);
+    const result = updateUser(prisma)(Number(userId), body);
 
     return result.match(
       (user) => ({ status: 200, body: user }),

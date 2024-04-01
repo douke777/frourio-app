@@ -1,12 +1,12 @@
-import { User, Post } from '@prisma/client';
+import { User, Post, PrismaClient } from '@prisma/client';
 import { ResultAsync, errAsync, okAsync } from 'neverthrow';
 
 import { BadRequestError, Err, NotFoundError } from '$/lib/error';
 import { CreatingPost, EditingPost, PostWithDetails } from '$/types/posts';
 
-import { handlePrismaError, prisma } from '..';
+import { handlePrismaError } from '..';
 
-export function getNewPosts(): ResultAsync<PostWithDetails[], Err> {
+export const getNewPosts = (prisma: PrismaClient): ResultAsync<PostWithDetails[], Err> => {
   return ResultAsync.fromPromise(
     prisma.post.findMany({
       where: {
@@ -34,148 +34,155 @@ export function getNewPosts(): ResultAsync<PostWithDetails[], Err> {
     }),
     (e) => handlePrismaError(e),
   ).andThen((posts) => (posts.length ? okAsync(posts) : errAsync(new NotFoundError())));
-}
+};
 
-export function getPostsByCategory(
-  categorySlug: Post['categorySlug'],
-): ResultAsync<PostWithDetails[], Err> {
-  return ResultAsync.fromPromise(
-    prisma.post.findMany({
-      where: {
-        AND: [{ published: true }, { categorySlug }],
-      },
-      orderBy: {
-        id: 'desc',
-      },
-      include: {
-        category: {
-          select: {
-            id: true,
-            slug: true,
+export const getPostsByCategory =
+  (prisma: PrismaClient) =>
+  (categorySlug: Post['categorySlug']): ResultAsync<PostWithDetails[], Err> => {
+    return ResultAsync.fromPromise(
+      prisma.post.findMany({
+        where: {
+          AND: [{ published: true }, { categorySlug }],
+        },
+        orderBy: {
+          id: 'desc',
+        },
+        include: {
+          category: {
+            select: {
+              id: true,
+              slug: true,
+            },
+          },
+          author: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+            },
           },
         },
-        author: {
-          select: {
-            id: true,
-            name: true,
-            image: true,
-          },
-        },
-      },
-    }),
-    (e) => handlePrismaError(e),
-  ).andThen((posts) => (posts.length ? okAsync(posts) : errAsync(new NotFoundError())));
-}
+      }),
+      (e) => handlePrismaError(e),
+    ).andThen((posts) => (posts.length ? okAsync(posts) : errAsync(new NotFoundError())));
+  };
 
-export function getRelatedPosts(
-  postId: Post['id'],
-  categorySlug: Post['categorySlug'],
-): ResultAsync<PostWithDetails[], Err> {
-  return ResultAsync.fromPromise(
-    prisma.post.findMany({
-      where: {
-        categorySlug,
-        NOT: {
-          id: postId,
-        },
-      },
-      take: 3,
-      orderBy: {
-        id: 'desc',
-      },
-      include: {
-        category: {
-          select: {
-            id: true,
-            slug: true,
+export const getRelatedPosts =
+  (prisma: PrismaClient) =>
+  (postId: Post['id'], categorySlug: Post['categorySlug']): ResultAsync<PostWithDetails[], Err> => {
+    return ResultAsync.fromPromise(
+      prisma.post.findMany({
+        where: {
+          categorySlug,
+          NOT: {
+            id: postId,
           },
         },
-        author: {
-          select: {
-            id: true,
-            name: true,
-            image: true,
+        take: 3,
+        orderBy: {
+          id: 'desc',
+        },
+        include: {
+          category: {
+            select: {
+              id: true,
+              slug: true,
+            },
+          },
+          author: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+            },
           },
         },
-      },
-    }),
-    (e) => handlePrismaError(e),
-  ).andThen((posts) => (posts.length ? okAsync(posts) : errAsync(new NotFoundError())));
-}
+      }),
+      (e) => handlePrismaError(e),
+    ).andThen((posts) => (posts.length ? okAsync(posts) : errAsync(new NotFoundError())));
+  };
 
 // TODO: getPostsBySearch
 
-export function getPostById(postId: Post['id']): ResultAsync<Post, Err> {
-  return ResultAsync.fromPromise(
-    prisma.post.findUniqueOrThrow({
-      where: {
-        id: postId,
-        published: true,
-      },
-    }),
-    (e) => handlePrismaError(e),
-  );
-}
+export const getPostById =
+  (prisma: PrismaClient) =>
+  (postId: Post['id']): ResultAsync<Post, Err> => {
+    return ResultAsync.fromPromise(
+      prisma.post.findUniqueOrThrow({
+        where: {
+          id: postId,
+          published: true,
+        },
+      }),
+      (e) => handlePrismaError(e),
+    );
+  };
 
-export const createPost = (authorId: User['id'], dto: CreatingPost): ResultAsync<Post, Err> => {
-  return ResultAsync.fromPromise(
-    prisma.post.create({
-      data: {
-        ...dto,
-        authorId,
-      },
-    }),
-    (e) => handlePrismaError(e),
-  );
-};
+export const createPost =
+  (prisma: PrismaClient) =>
+  (authorId: User['id'], dto: CreatingPost): ResultAsync<Post, Err> => {
+    return ResultAsync.fromPromise(
+      prisma.post.create({
+        data: {
+          ...dto,
+          authorId,
+        },
+      }),
+      (e) => handlePrismaError(e),
+    );
+  };
 
-export function updatePost(
-  authorId: User['id'],
-  postId: Post['id'],
-  dto: Omit<EditingPost, 'id'>,
-): ResultAsync<Post, Err> {
-  return ResultAsync.fromPromise(
-    prisma.post.findUnique({
-      where: {
-        id: postId,
-      },
-    }),
-    (e) => handlePrismaError(e),
-  ).andThen((post) =>
-    !post || post.authorId !== authorId
-      ? errAsync(new BadRequestError())
-      : ResultAsync.fromPromise(
-          prisma.post.update({
-            where: {
-              id: postId,
-            },
-            data: {
-              ...dto,
-            },
-          }),
-          (e) => handlePrismaError(e),
-        ),
-  );
-}
+export const updatePost =
+  (prisma: PrismaClient) =>
+  (
+    authorId: User['id'],
+    postId: Post['id'],
+    dto: Omit<EditingPost, 'id'>,
+  ): ResultAsync<Post, Err> => {
+    return ResultAsync.fromPromise(
+      prisma.post.findUnique({
+        where: {
+          id: postId,
+        },
+      }),
+      (e) => handlePrismaError(e),
+    ).andThen((post) =>
+      !post || post.authorId !== authorId
+        ? errAsync(new BadRequestError())
+        : ResultAsync.fromPromise(
+            prisma.post.update({
+              where: {
+                id: postId,
+              },
+              data: {
+                ...dto,
+              },
+            }),
+            (e) => handlePrismaError(e),
+          ),
+    );
+  };
 
-export function deletePost(authorId: User['id'], postId: Post['id']): ResultAsync<Post, Err> {
-  return ResultAsync.fromPromise(
-    prisma.post.findUnique({
-      where: {
-        id: postId,
-      },
-    }),
-    (e) => handlePrismaError(e),
-  ).andThen((post) =>
-    !post || post.authorId !== authorId
-      ? errAsync(new BadRequestError())
-      : ResultAsync.fromPromise(
-          prisma.post.delete({
-            where: {
-              id: postId,
-            },
-          }),
-          (e) => handlePrismaError(e),
-        ),
-  );
-}
+export const deletePost =
+  (prisma: PrismaClient) =>
+  (authorId: User['id'], postId: Post['id']): ResultAsync<Post, Err> => {
+    return ResultAsync.fromPromise(
+      prisma.post.findUnique({
+        where: {
+          id: postId,
+        },
+      }),
+      (e) => handlePrismaError(e),
+    ).andThen((post) =>
+      !post || post.authorId !== authorId
+        ? errAsync(new BadRequestError())
+        : ResultAsync.fromPromise(
+            prisma.post.delete({
+              where: {
+                id: postId,
+              },
+            }),
+            (e) => handlePrismaError(e),
+          ),
+    );
+  };
