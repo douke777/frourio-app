@@ -39,7 +39,7 @@ export const login =
     return generateJwt(app, user.id, user.email);
   };
 
-export async function generateJwt(app: FastifyInstance, userId: User['id'], email: User['email']) {
+export function generateJwt(app: FastifyInstance, userId: User['id'], email: User['email']) {
   const payload = {
     sub: userId,
     email,
