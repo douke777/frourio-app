@@ -16,7 +16,7 @@ export default defineHooks((app) => ({
     const jwt = await login(prisma)(app, req.body);
     reply.setCookie('access_token', jwt.accessToken, {
       httpOnly: true,
-      secure: false, // TODO: true
+      secure: true,
       sameSite: 'none',
       path: '/',
     });

@@ -32,7 +32,7 @@ app.register(fastifyCsrf, {
   cookieOpts: {
     httpOnly: true,
     sameSite: 'none',
-    secure: false, // TODO: true
+    secure: true,
     path: '/',
   },
 });
