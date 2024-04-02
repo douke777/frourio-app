@@ -1,13 +1,14 @@
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useNavigate, useRoutes } from 'react-router-dom';
 
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 import { ToastContainer } from 'react-toastify';
 
 import 'react-toastify/ReactToastify.min.css';
 
 import { SWRConfig } from 'swr';
 
+import apiClient from '@/lib/apiClient';
 import { ErrorResponseData } from '@/lib/axios';
 import { errorToast } from '@/lib/toast';
 
@@ -18,6 +19,13 @@ import routes from '~react-pages'; // NOTE: filebased routingを行うために�
 
 export default function App() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    (async () => {
+      const { csrfToken } = await apiClient.auth.csrf.$get();
+      axios.defaults.headers.common['csrf-token'] = csrfToken;
+    })();
+  }, []);
 
   return (
     <>

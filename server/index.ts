@@ -19,7 +19,10 @@ const app = fastify({
   },
 });
 
-app.register(fastifyCors, {});
+app.register(fastifyCors, {
+  origin: true,
+  credentials: true,
+});
 app.register(fastifyJwt, {
   secret: 'mSSS9Zrd',
   cookie: {
