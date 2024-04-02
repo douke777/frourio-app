@@ -1,11 +1,13 @@
 import { defineHooks } from './$relay';
 
 export default defineHooks((app) => ({
-  onRequest: (req, reply, done) => {
-    if (req.method !== 'GET') {
-      app.csrfProtection(req, reply, done);
+  preParsing: (req, reply, _payload, done) => {
+    if (req.method === 'GET') {
+      done();
+
+      return;
     }
 
-    done();
+    app.csrfProtection(req, reply, done);
   },
 }));
