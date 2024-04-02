@@ -33,6 +33,7 @@ app.register(fastifyCsrf, {
     httpOnly: true,
     sameSite: 'none',
     secure: false, // TODO: true
+    path: '/',
   },
 });
 
