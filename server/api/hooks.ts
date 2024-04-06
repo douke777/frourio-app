@@ -2,7 +2,7 @@ import { defineHooks } from './$relay';
 
 export default defineHooks((app) => ({
   preParsing: (req, reply, _payload, done) => {
-    if (req.method === 'GET') {
+    if (!['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
       done();
 
       return;
