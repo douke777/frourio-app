@@ -1,4 +1,3 @@
-import { prisma } from '$/service';
 import { verifyJwtToken } from '$/service/auth';
 import { createPost, getNewPosts } from '$/service/posts';
 import { JwtPayload } from '$/types/auth';
@@ -11,7 +10,7 @@ export type AdditionalRequest = {
 
 export default defineController(() => ({
   get: () => {
-    const result = getNewPosts(prisma);
+    const result = getNewPosts();
 
     return result.match(
       (posts) => ({ status: 200, body: posts }),
@@ -26,7 +25,7 @@ export default defineController(() => ({
     },
     handler: ({ body, user }) => {
       const authorId = user.sub;
-      const result = createPost(prisma)(authorId, body);
+      const result = createPost(authorId, body);
 
       return result.match(
         (post) => ({ status: 201, body: post }),

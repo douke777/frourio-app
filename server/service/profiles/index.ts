@@ -1,14 +1,15 @@
-import { PrismaClient, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { ResultAsync } from 'neverthrow';
+import { depend } from 'velona';
 
 import { Err } from '$/lib/error';
 import { EditingUserWithProfile, UserWithProfile } from '$/types/profiles';
 
-import { handlePrismaError } from '..';
+import { prisma, handlePrismaError } from '..';
 
-export const getUserWithProfile =
-  (prisma: PrismaClient) =>
-  (userId: User['id']): ResultAsync<UserWithProfile, Err> => {
+export const getUserWithProfile = depend(
+  { prisma },
+  ({ prisma }, userId: User['id']): ResultAsync<UserWithProfile, Err> => {
     return ResultAsync.fromPromise(
       prisma.user.findUniqueOrThrow({
         where: {
@@ -28,11 +29,16 @@ export const getUserWithProfile =
       }),
       (e) => handlePrismaError(e),
     );
-  };
+  },
+);
 
-export const upsertProfile =
-  (prisma: PrismaClient) =>
-  (userId: User['id'], dto: EditingUserWithProfile): ResultAsync<UserWithProfile, Err> => {
+export const upsertProfile = depend(
+  { prisma },
+  (
+    { prisma },
+    userId: User['id'],
+    dto: EditingUserWithProfile,
+  ): ResultAsync<UserWithProfile, Err> => {
     return ResultAsync.fromPromise(
       prisma.user.update({
         where: {
@@ -65,4 +71,5 @@ export const upsertProfile =
       }),
       (e) => handlePrismaError(e),
     );
-  };
+  },
+);

@@ -1,31 +1,32 @@
-import { PrismaClient, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { compare, hash } from 'bcryptjs';
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import { depend } from 'velona';
 
 import { Jwt, Msg, SignUpDto, LoginDto } from '$/types/auth';
 
-export const signUp =
-  (prisma: PrismaClient) =>
-  async (dto: SignUpDto): Promise<Msg> => {
-    const hashedPassword = await hash(dto.password, 12);
-    await prisma.user.create({
-      data: {
-        name: dto.name,
-        email: dto.email,
-        password: hashedPassword,
-      },
-    });
-    // TODO: error handling P2002 → すでにUserがあるとき。 This email is already taken
+import { prisma } from '..';
 
-    // TODO: メッセージのreturnいる？
-    return {
-      message: 'ok',
-    };
+export const signUp = depend({ prisma }, async ({ prisma }, dto: SignUpDto): Promise<Msg> => {
+  const hashedPassword = await hash(dto.password, 12);
+  await prisma.user.create({
+    data: {
+      name: dto.name,
+      email: dto.email,
+      password: hashedPassword,
+    },
+  });
+  // TODO: error handling P2002 → すでにUserがあるとき。 This email is already taken
+
+  // TODO: メッセージのreturnいる？
+  return {
+    message: 'ok',
   };
+});
 
-export const login =
-  (prisma: PrismaClient) =>
-  async (app: FastifyInstance, dto: LoginDto): Promise<Jwt> => {
+export const login = depend(
+  { prisma },
+  async ({ prisma }, app: FastifyInstance, dto: LoginDto): Promise<Jwt> => {
     const user = await prisma.user.findUnique({
       where: {
         email: dto.email,
@@ -37,7 +38,8 @@ export const login =
     if (!isValid) throw new Error('Email or password incorrect');
 
     return generateJwt(app, user.id, user.email);
-  };
+  },
+);
 
 export function generateJwt(app: FastifyInstance, userId: User['id'], email: User['email']) {
   const payload = {

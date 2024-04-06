@@ -1,16 +1,17 @@
-import { PrismaClient, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { ResultAsync } from 'neverthrow';
+import { depend } from 'velona';
 
 import { Err } from '$/lib/error';
 import { CreatingUser } from '$/types/users';
 
-import { handlePrismaError } from '..';
+import { prisma, handlePrismaError } from '..';
 
 // TODO: passwordとかをomitする
 
-export const getUserById =
-  (prisma: PrismaClient) =>
-  (userId: User['id']): ResultAsync<User, Err> => {
+export const getUserById = depend(
+  { prisma },
+  ({ prisma }, userId: User['id']): ResultAsync<User, Err> => {
     return ResultAsync.fromPromise(
       prisma.user.findUniqueOrThrow({
         where: {
@@ -19,11 +20,12 @@ export const getUserById =
       }),
       (e) => handlePrismaError(e),
     );
-  };
+  },
+);
 
-export const createUser =
-  (prisma: PrismaClient) =>
-  (dto: CreatingUser): ResultAsync<User, Err> => {
+export const createUser = depend(
+  { prisma },
+  ({ prisma }, dto: CreatingUser): ResultAsync<User, Err> => {
     return ResultAsync.fromPromise(
       prisma.user.create({
         data: {
@@ -32,12 +34,12 @@ export const createUser =
       }),
       (e) => handlePrismaError(e),
     );
-  };
-
+  },
+);
 // export function updateUser(userId: User['id'], dto: EditingUser): ResultAsync<User, Err> {
-export const updateUser =
-  (prisma: PrismaClient) =>
-  (userId: User['id'], dto: { name: string }): ResultAsync<User, Err> => {
+export const updateUser = depend(
+  { prisma },
+  ({ prisma }, userId: User['id'], dto: { name: string }): ResultAsync<User, Err> => {
     return ResultAsync.fromPromise(
       prisma.user.findUniqueOrThrow({
         where: {
@@ -58,11 +60,12 @@ export const updateUser =
         (e) => handlePrismaError(e),
       ),
     );
-  };
+  },
+);
 
-export const deleteUser =
-  (prisma: PrismaClient) =>
-  (userId: User['id']): ResultAsync<User, Err> => {
+export const deleteUser = depend(
+  { prisma },
+  ({ prisma }, userId: User['id']): ResultAsync<User, Err> => {
     return ResultAsync.fromPromise(
       prisma.user.findUniqueOrThrow({
         where: {
@@ -80,4 +83,5 @@ export const deleteUser =
         (e) => handlePrismaError(e),
       ),
     );
-  };
+  },
+);

@@ -1,11 +1,12 @@
-import { Category, Post, PrismaClient, User } from '@prisma/client';
+import { Category, Post, User } from '@prisma/client';
 import { ResultAsync, errAsync, okAsync } from 'neverthrow';
+import { depend } from 'velona';
 
 import { Err, NotFoundError } from '$/lib/error';
 
-import { handlePrismaError } from '..';
+import { prisma, handlePrismaError } from '..';
 
-export const getCategories = (prisma: PrismaClient): ResultAsync<Category[], Err> => {
+export const getCategories = depend({ prisma }, ({ prisma }): ResultAsync<Category[], Err> => {
   return ResultAsync.fromPromise(
     prisma.category.findMany({
       orderBy: {
@@ -16,11 +17,12 @@ export const getCategories = (prisma: PrismaClient): ResultAsync<Category[], Err
   ).andThen((categories) =>
     categories.length ? okAsync(categories) : errAsync(new NotFoundError()),
   );
-};
+});
 
-export const getCategoryById =
-  (prisma: PrismaClient) =>
+export const getCategoryById = depend(
+  { prisma },
   (
+    { prisma },
     id: Category['id'],
   ): ResultAsync<
     Category & {
@@ -45,4 +47,5 @@ export const getCategoryById =
       }),
       (e) => handlePrismaError(e),
     );
-  };
+  },
+);
