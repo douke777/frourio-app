@@ -2,7 +2,7 @@ import { getCategories } from '$/service/categories';
 
 import { defineController } from './$relay';
 
-export default defineController(() => ({
+export default defineController({ getCategories }, ({ getCategories }) => ({
   get: () => {
     const result = getCategories();
 

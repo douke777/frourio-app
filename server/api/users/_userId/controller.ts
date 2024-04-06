@@ -2,7 +2,7 @@ import { getUserById, updateUser } from '$/service/users';
 
 import { defineController } from './$relay';
 
-export default defineController(() => ({
+export default defineController({ getUserById, updateUser }, ({ getUserById, updateUser }) => ({
   get: ({ params: { userId } }) => {
     const result = getUserById(Number(userId));
 

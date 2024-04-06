@@ -2,7 +2,7 @@ import { getCategoryById } from '$/service/categories';
 
 import { defineController } from './$relay';
 
-export default defineController(() => ({
+export default defineController({ getCategoryById }, ({ getCategoryById }) => ({
   get: ({ params: { categoryId } }) => {
     const result = getCategoryById(Number(categoryId));
 

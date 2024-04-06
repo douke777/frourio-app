@@ -8,7 +8,7 @@ export type AdditionalRequest = {
   user: JwtPayload;
 };
 
-export default defineController(() => ({
+export default defineController({ createPost, getNewPosts }, ({ createPost, getNewPosts }) => ({
   get: () => {
     const result = getNewPosts();
 
