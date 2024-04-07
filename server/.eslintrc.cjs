@@ -56,4 +56,12 @@ module.exports = {
       },
     ],
   },
+  overrides: [
+    {
+      files: ['**/*.test.ts', '**/*.spec.ts'],
+      rules: {
+        'neverthrow/must-use-result': 'off',
+      },
+    },
+  ],
 };
