@@ -9,7 +9,6 @@ import hooksFn_1yps78r from 'api/auth/login/hooks';
 import hooksFn_17hl5xi from 'api/auth/logout/hooks';
 import hooksFn_162n5ob from 'api/likes/hooks';
 import hooksFn_17843s1 from 'api/profiles/hooks';
-import hooksFn_11zimof from 'api/users/_userId/hooks';
 import validatorsFn_1ln2ulj from 'api/categories/_categoryId/validators';
 import validatorsFn_15if2po from 'api/posts/_postId/validators';
 import validatorsFn_1p3f06i from 'api/users/_userId/validators';
@@ -184,7 +183,6 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   const hooks_17hl5xi = hooksFn_17hl5xi(fastify);
   const hooks_162n5ob = hooksFn_162n5ob(fastify);
   const hooks_17843s1 = hooksFn_17843s1(fastify);
-  const hooks_11zimof = hooksFn_11zimof(fastify);
   const validators_1ln2ulj = validatorsFn_1ln2ulj(fastify);
   const validators_15if2po = validatorsFn_15if2po(fastify);
   const validators_1p3f06i = validatorsFn_1p3f06i(fastify);
@@ -409,9 +407,8 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
         params: validators_1p3f06i.params,
       },
       validatorCompiler,
-      onRequest: hooks_11zimof.onRequest,
       preParsing: hooks_1m6qgto.preParsing,
-    } as RouteShorthandOptions,
+    },
     asyncMethodToHandler(controller_15x3ppx.get),
   );
 
@@ -422,9 +419,8 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
         params: validators_1p3f06i.params,
       },
       validatorCompiler,
-      onRequest: hooks_11zimof.onRequest,
       preParsing: hooks_1m6qgto.preParsing,
-    } as RouteShorthandOptions,
+    },
     asyncMethodToHandler(controller_15x3ppx.patch),
   );
 
