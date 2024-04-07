@@ -1,7 +1,9 @@
 import { faker } from '@faker-js/faker';
-import { Post } from '@prisma/client';
+import { Post, User } from '@prisma/client';
 
-import { getPostById } from '.';
+import { postFactory, userFactory } from '$/__test__/factories';
+
+import { createPost, getPostById } from '.';
 
 const prisma = jestPrisma.client;
 
@@ -11,24 +13,7 @@ describe('getPostById', () => {
   let post: Post;
 
   beforeEach(async () => {
-    // TODO: factory
-    const user = await prisma.user.create({
-      data: {
-        name: faker.person.fullName(),
-        email: faker.internet.email(),
-        password: faker.internet.password(),
-      },
-    });
-
-    post = await prisma.post.create({
-      data: {
-        title: faker.lorem.word(),
-        content: faker.lorem.sentence(),
-        published: true,
-        categorySlug: 'programming',
-        authorId: user.id,
-      },
-    });
+    post = await postFactory(prisma);
   });
 
   it('Success', async () => {
@@ -43,5 +28,29 @@ describe('getPostById', () => {
     const result = await injectedGetPostById(nonExistentId);
 
     expect(result._unsafeUnwrapErr().constructor.name).toBe('NotFoundError');
+  });
+});
+
+describe('createPost', () => {
+  const injectedCreatePost = createPost.inject({ prisma });
+
+  let user: User;
+
+  beforeEach(async () => {
+    user = await userFactory(prisma);
+  });
+
+  it('Success', async () => {
+    const authorId = user.id;
+    const data = {
+      title: faker.lorem.word(),
+      content: faker.lorem.sentence(),
+      published: true,
+      categorySlug: 'programming',
+    };
+
+    const result = await injectedCreatePost(authorId, data);
+
+    expect(result._unsafeUnwrap().title).toEqual(data.title);
   });
 });
