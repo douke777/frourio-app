@@ -71,41 +71,51 @@ export const getPostsByCategory = depend(
 
 export const getRelatedPosts = depend(
   { prisma },
-  (
-    { prisma },
-    postId: Post['id'],
-    categorySlug: Post['categorySlug'],
-  ): ResultAsync<PostWithDetails[], Err> => {
+  ({ prisma }, postId: Post['id']): ResultAsync<PostWithDetails[], Err> => {
     return ResultAsync.fromPromise(
-      prisma.post.findMany({
+      prisma.post.findUniqueOrThrow({
         where: {
-          categorySlug,
-          NOT: {
-            id: postId,
-          },
+          id: postId,
         },
-        take: 3,
-        orderBy: {
-          id: 'desc',
-        },
-        include: {
-          category: {
-            select: {
-              id: true,
-              slug: true,
-            },
-          },
-          author: {
-            select: {
-              id: true,
-              name: true,
-              image: true,
-            },
-          },
+        select: {
+          categorySlug: true,
         },
       }),
       (e) => handlePrismaError(e),
-    ).andThen((posts) => (posts.length ? okAsync(posts) : errAsync(new NotFoundError())));
+    )
+      .andThen((post) =>
+        ResultAsync.fromPromise(
+          prisma.post.findMany({
+            where: {
+              categorySlug: post.categorySlug,
+              NOT: {
+                id: postId,
+              },
+            },
+            take: 3,
+            orderBy: {
+              id: 'desc',
+            },
+            include: {
+              category: {
+                select: {
+                  id: true,
+                  slug: true,
+                },
+              },
+              author: {
+                select: {
+                  id: true,
+                  name: true,
+                  image: true,
+                },
+              },
+            },
+          }),
+          (e) => handlePrismaError(e),
+        ),
+      )
+      .andThen((posts) => okAsync(posts));
   },
 );
 

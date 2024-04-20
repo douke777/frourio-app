@@ -332,8 +332,9 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
     `${basePath}/posts/related`,
     {
       preParsing: hooks_1m6qgto.preParsing,
+      preValidation: parseNumberTypeQueryParams([['postId', false, false]]),
     },
-    methodToHandler(controller_57a8rs.get),
+    asyncMethodToHandler(controller_57a8rs.get),
   );
 
   fastify.get(
