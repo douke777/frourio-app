@@ -14,6 +14,11 @@ export const signUp = depend({ prisma }, async ({ prisma }, dto: SignUpDto): Pro
       name: dto.name,
       email: dto.email,
       password: hashedPassword,
+      profile: {
+        create: {
+          bio: '',
+        },
+      },
     },
   });
   // TODO: error handling P2002 → すでにUserがあるとき。 This email is already taken
