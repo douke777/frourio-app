@@ -48,6 +48,7 @@ export const getPostsByCategory = depend(
         where: {
           AND: [{ published: true }, { categorySlug }],
         },
+        take: 24,
         orderBy: {
           id: 'desc',
         },

@@ -134,10 +134,10 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
         };
       },
       category: {
-        get: (option?: { query?: Methods_svgbni['get']['query'] | undefined, config?: T | undefined } | undefined) =>
-          fetch<Methods_svgbni['get']['resBody']>(prefix, PATH9, GET, option).text(),
-        $get: (option?: { query?: Methods_svgbni['get']['query'] | undefined, config?: T | undefined } | undefined) =>
-          fetch<Methods_svgbni['get']['resBody']>(prefix, PATH9, GET, option).text().then(r => r.body),
+        get: (option: { query: Methods_svgbni['get']['query'], config?: T | undefined }) =>
+          fetch<Methods_svgbni['get']['resBody']>(prefix, PATH9, GET, option).json(),
+        $get: (option: { query: Methods_svgbni['get']['query'], config?: T | undefined }) =>
+          fetch<Methods_svgbni['get']['resBody']>(prefix, PATH9, GET, option).json().then(r => r.body),
         $path: (option?: { method?: 'get' | undefined; query: Methods_svgbni['get']['query'] } | undefined) =>
           `${prefix}${PATH9}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
       },

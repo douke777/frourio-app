@@ -148,9 +148,6 @@ const parseNumberTypeQueryParams = (numberTypeParams: [string, boolean, boolean]
   done();
 };
 
-const callParserIfExistsQuery = (parser: OmitThisParameter<preValidationHookHandler>): preValidationHookHandler => (req, reply, done) =>
-  Object.keys(req.query as any).length ? parser(req, reply, done) : done();
-
 const validatorCompiler: FastifySchemaCompiler<FastifySchema> = ({ schema }) => (data: unknown) => {
   const result = (schema as z.ZodType<unknown>).safeParse(data);
   return result.success ? { value: result.data } : { error: result.error };
@@ -325,9 +322,8 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
     `${basePath}/posts/category`,
     {
       preParsing: hooks_1m6qgto.preParsing,
-      preValidation: callParserIfExistsQuery(parseNumberTypeQueryParams([['limit', false, false]])),
     },
-    methodToHandler(controller_3izadp.get),
+    asyncMethodToHandler(controller_3izadp.get),
   );
 
   fastify.get(

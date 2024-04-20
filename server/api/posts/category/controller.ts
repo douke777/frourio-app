@@ -1,12 +1,16 @@
+import { getPostsByCategory } from '$/service/posts';
+
 import { defineController } from './$relay';
 
 export default defineController(() => ({
-  get: ({ query }) => {
-    const limit = query?.limit;
-    if (limit) {
-      return { status: 200, body: String(query?.limit) };
-    }
+  get: ({ query: { categorySlug } }) => {
+    const result = getPostsByCategory(categorySlug);
 
-    return { status: 200, body: 'aaa' };
+    return result.match(
+      (posts) => ({ status: 200, body: posts }),
+      (error) => {
+        throw error;
+      },
+    );
   },
 }));
