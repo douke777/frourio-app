@@ -87,7 +87,7 @@ export const getRelatedPosts = depend(
         ResultAsync.fromPromise(
           prisma.post.findMany({
             where: {
-              categorySlug: post.categorySlug,
+              AND: [{ published: true }, { categorySlug: post.categorySlug }],
               NOT: {
                 id: postId,
               },
