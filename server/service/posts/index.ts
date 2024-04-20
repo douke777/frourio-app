@@ -7,35 +7,38 @@ import { CreatingPost, EditingPost, PostWithDetails } from '$/types/posts';
 
 import { prisma, handlePrismaError } from '..';
 
-export const getNewPosts = depend({ prisma }, ({ prisma }): ResultAsync<PostWithDetails[], Err> => {
-  return ResultAsync.fromPromise(
-    prisma.post.findMany({
-      where: {
-        published: true,
-      },
-      take: 24,
-      orderBy: {
-        id: 'desc',
-      },
-      include: {
-        category: {
-          select: {
-            id: true,
-            slug: true,
+export const getLatestPosts = depend(
+  { prisma },
+  ({ prisma }): ResultAsync<PostWithDetails[], Err> => {
+    return ResultAsync.fromPromise(
+      prisma.post.findMany({
+        where: {
+          published: true,
+        },
+        take: 24,
+        orderBy: {
+          id: 'desc',
+        },
+        include: {
+          category: {
+            select: {
+              id: true,
+              slug: true,
+            },
+          },
+          author: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+            },
           },
         },
-        author: {
-          select: {
-            id: true,
-            name: true,
-            image: true,
-          },
-        },
-      },
-    }),
-    (e) => handlePrismaError(e),
-  ).andThen((posts) => okAsync(posts));
-});
+      }),
+      (e) => handlePrismaError(e),
+    ).andThen((posts) => okAsync(posts));
+  },
+);
 
 export const getPostsByCategory = depend(
   { prisma },
