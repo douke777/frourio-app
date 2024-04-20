@@ -1,8 +1,8 @@
 import { User, Post, Like, Prisma } from '@prisma/client';
-import { ResultAsync, errAsync, okAsync } from 'neverthrow';
+import { ResultAsync, okAsync } from 'neverthrow';
 import { depend } from 'velona';
 
-import { Err, NotFoundError } from '$/lib/error';
+import { Err } from '$/lib/error';
 
 import { prisma, handlePrismaError } from '..';
 
@@ -10,14 +10,14 @@ export const getLike = depend(
   { prisma },
   ({ prisma }, userId: User['id'], postId: Post['id']): ResultAsync<Like, Err> => {
     return ResultAsync.fromPromise(
-      prisma.like.findFirst({
+      prisma.like.findFirstOrThrow({
         where: {
           userId,
           postId,
         },
       }),
       (e) => handlePrismaError(e),
-    ).andThen((like) => (like ? okAsync(like) : errAsync(new NotFoundError())));
+    ).andThen((like) => okAsync(like));
   },
 );
 
