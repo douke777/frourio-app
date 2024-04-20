@@ -2,7 +2,7 @@ import { User, Post } from '@prisma/client';
 import { ResultAsync, errAsync, okAsync } from 'neverthrow';
 import { depend } from 'velona';
 
-import { BadRequestError, Err, NotFoundError } from '$/lib/error';
+import { BadRequestError, Err } from '$/lib/error';
 import { CreatingPost, EditingPost, PostWithDetails } from '$/types/posts';
 
 import { prisma, handlePrismaError } from '..';
@@ -34,7 +34,7 @@ export const getNewPosts = depend({ prisma }, ({ prisma }): ResultAsync<PostWith
       },
     }),
     (e) => handlePrismaError(e),
-  ).andThen((posts) => (posts.length ? okAsync(posts) : errAsync(new NotFoundError())));
+  ).andThen((posts) => okAsync(posts));
 });
 
 export const getPostsByCategory = depend(
@@ -65,7 +65,7 @@ export const getPostsByCategory = depend(
         },
       }),
       (e) => handlePrismaError(e),
-    ).andThen((posts) => (posts.length ? okAsync(posts) : errAsync(new NotFoundError())));
+    ).andThen((posts) => okAsync(posts));
   },
 );
 
