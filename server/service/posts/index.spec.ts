@@ -3,7 +3,7 @@ import { Post, User } from '@prisma/client';
 
 import { postFactory, userFactory } from '$/__test__/factories';
 
-import { createPost, getPostById } from '.';
+import { createPost, deletePost, getPostById } from '.';
 
 const prisma = jestPrisma.client;
 
@@ -52,5 +52,29 @@ describe('createPost', () => {
     const result = await injectedCreatePost(authorId, data);
 
     expect(result._unsafeUnwrap().title).toEqual(data.title);
+  });
+});
+
+describe('deletePost', () => {
+  const injectedDeletePost = deletePost.inject({ prisma });
+
+  let post: Post;
+
+  beforeEach(async () => {
+    post = await postFactory(prisma);
+  });
+
+  it('Success', async () => {
+    const result = await injectedDeletePost(post.authorId, post.id);
+
+    expect(result._unsafeUnwrap().title).toEqual(post.title);
+  });
+
+  describe('authorId is incorrect', () => {
+    it('BadRequestError', async () => {
+      const result = await injectedDeletePost(post.authorId + 1, post.id);
+
+      expect(result._unsafeUnwrapErr().constructor.name).toBe('BadRequestError');
+    });
   });
 });
