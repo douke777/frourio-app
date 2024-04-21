@@ -183,6 +183,21 @@ export const getPostById = depend(
           id: postId,
           published: true,
         },
+        include: {
+          category: {
+            select: {
+              id: true,
+              slug: true,
+            },
+          },
+          author: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+            },
+          },
+        },
       }),
       (e) => handlePrismaError(e),
     );
