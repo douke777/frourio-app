@@ -123,7 +123,56 @@ export const getRelatedPosts = depend(
   },
 );
 
-// TODO: getPostsBySearch
+export const getPostsBySearch = depend(
+  { prisma },
+  ({ prisma }, query: string): ResultAsync<PostWithDetails[], Err> => {
+    return ResultAsync.fromPromise(
+      prisma.post.findMany({
+        where: {
+          AND: [
+            {
+              OR: [
+                {
+                  title: {
+                    contains: query,
+                  },
+                },
+                {
+                  content: {
+                    contains: query,
+                  },
+                },
+              ],
+            },
+            {
+              published: true,
+            },
+          ],
+        },
+        take: 20,
+        orderBy: {
+          id: 'desc',
+        },
+        include: {
+          category: {
+            select: {
+              id: true,
+              slug: true,
+            },
+          },
+          author: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+            },
+          },
+        },
+      }),
+      (e) => handlePrismaError(e),
+    ).andThen((posts) => okAsync(posts));
+  },
+);
 
 export const getPostById = depend(
   { prisma },
