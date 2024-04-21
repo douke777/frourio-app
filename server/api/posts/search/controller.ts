@@ -2,7 +2,7 @@ import { getPostsBySearch } from '$/service/posts';
 
 import { defineController } from './$relay';
 
-export default defineController(() => ({
+export default defineController({ getPostsBySearch }, ({ getPostsBySearch }) => ({
   get: ({ query: { q } }) => {
     const result = getPostsBySearch(q);
 

@@ -24,7 +24,6 @@ import controllerFn_1c8eilo from 'api/hi/controller';
 import controllerFn_pcjixt from 'api/likes/controller';
 import controllerFn_1fkamk4 from 'api/posts/controller';
 import controllerFn_3izadp from 'api/posts/category/controller';
-import controllerFn_32koxk from 'api/posts/latest/controller';
 import controllerFn_57a8rs from 'api/posts/related/controller';
 import controllerFn_1hdpe9t from 'api/posts/search/controller';
 import controllerFn_badbgf from 'api/posts/_postId/controller';
@@ -197,7 +196,6 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   const controller_pcjixt = controllerFn_pcjixt(fastify);
   const controller_1fkamk4 = controllerFn_1fkamk4(fastify);
   const controller_3izadp = controllerFn_3izadp(fastify);
-  const controller_32koxk = controllerFn_32koxk(fastify);
   const controller_57a8rs = controllerFn_57a8rs(fastify);
   const controller_1hdpe9t = controllerFn_1hdpe9t(fastify);
   const controller_badbgf = controllerFn_badbgf(fastify);
@@ -326,14 +324,6 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
       preParsing: hooks_1m6qgto.preParsing,
     },
     asyncMethodToHandler(controller_3izadp.get),
-  );
-
-  fastify.get(
-    `${basePath}/posts/latest`,
-    {
-      preParsing: hooks_1m6qgto.preParsing,
-    },
-    asyncMethodToHandler(controller_32koxk.get),
   );
 
   fastify.get(

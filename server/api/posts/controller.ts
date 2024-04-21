@@ -9,13 +9,13 @@ export type AdditionalRequest = {
 };
 
 export default defineController(
-  { createPost, getNewPosts: getLatestPosts },
-  ({ createPost, getNewPosts }) => ({
+  { createPost, getLatestPosts },
+  ({ createPost, getLatestPosts }) => ({
     get: () => {
-      const result = getNewPosts();
+      const result = getLatestPosts();
 
       return result.match(
-        (posts) => ({ status: 200, body: posts }),
+        (latestPosts) => ({ status: 200, body: latestPosts }),
         (error) => {
           throw error;
         },

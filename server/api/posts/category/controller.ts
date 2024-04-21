@@ -2,7 +2,7 @@ import { getPostsByCategory } from '$/service/posts';
 
 import { defineController } from './$relay';
 
-export default defineController(() => ({
+export default defineController({ getPostsByCategory }, ({ getPostsByCategory }) => ({
   get: ({ query: { categorySlug } }) => {
     const result = getPostsByCategory(categorySlug);
 

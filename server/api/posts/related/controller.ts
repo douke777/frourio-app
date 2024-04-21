@@ -2,7 +2,7 @@ import { getRelatedPosts } from '$/service/posts';
 
 import { defineController } from './$relay';
 
-export default defineController(() => ({
+export default defineController({ getRelatedPosts }, ({ getRelatedPosts }) => ({
   get: ({ query: { postId } }) => {
     const result = getRelatedPosts(postId);
 
