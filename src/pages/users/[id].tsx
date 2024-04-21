@@ -7,6 +7,7 @@ import { ConstMessage } from '@/components/Element/Const';
 
 import { user } from '@/data';
 
+// TODO：コンポネント化する
 const User: FC = () => {
   const { posts, profile, image, name } = user;
 
