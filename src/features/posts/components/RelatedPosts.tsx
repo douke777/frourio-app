@@ -1,12 +1,15 @@
 import { FC, memo } from 'react';
 
+import { useParams } from 'react-router';
+
 import { ConstMessage } from '@/components/Element/Const';
 
 import { PostList } from './List';
-import { usePosts } from '../api/getPosts';
+import { useGetRelatedPosts } from '../api/getRelatedPosts';
 
 export const RelatedPosts: FC = memo(() => {
-  const { data: posts } = usePosts();
+  const { id: postId } = useParams();
+  const { data: posts } = useGetRelatedPosts(postId);
 
   return (
     <div className='mb-4'>
@@ -14,7 +17,7 @@ export const RelatedPosts: FC = memo(() => {
         Related Posts
       </h2>
       <div className='mx-2 flex justify-center'>
-        {posts?.length ? (
+        {posts.length ? (
           <PostList posts={posts} className='grid gap-4 md:grid-cols-2 lg:grid-cols-1' />
         ) : (
           <ConstMessage message='No posts yet' />
