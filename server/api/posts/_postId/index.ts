@@ -1,12 +1,10 @@
-import { Post } from '@prisma/client';
-
-import { EditingPost } from '$/types/posts';
+import { EditingPost, PostWithDetails } from '$/types/posts';
 
 import type { DefineMethods } from 'aspida';
 
 export type Methods = DefineMethods<{
   get: {
-    resBody: Post;
+    resBody: PostWithDetails;
   };
   patch: {
     reqBody: Omit<EditingPost, 'id'>;

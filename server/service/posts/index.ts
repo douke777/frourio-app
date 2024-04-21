@@ -176,7 +176,7 @@ export const getPostsBySearch = depend(
 
 export const getPostById = depend(
   { prisma },
-  ({ prisma }, postId: Post['id']): ResultAsync<Post, Err> => {
+  ({ prisma }, postId: Post['id']): ResultAsync<PostWithDetails, Err> => {
     return ResultAsync.fromPromise(
       prisma.post.findUniqueOrThrow({
         where: {

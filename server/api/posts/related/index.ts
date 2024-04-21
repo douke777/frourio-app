@@ -4,9 +4,7 @@ import type { DefineMethods } from 'aspida';
 
 export type Methods = DefineMethods<{
   get: {
+    query: { postId: number };
     resBody: PostWithDetails[];
-    query: {
-      postId: number;
-    };
   };
 }>;
