@@ -1,13 +1,13 @@
 import { FC } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
+import { useGetPostsBySearch } from '@/features/posts/api/getPostsBySearch';
 import { PaginatedPostList } from '@/features/posts/components/PaginatedList';
-
-import { posts } from '@/data';
 
 const SearchPage: FC = () => {
   const [searchParams] = useSearchParams();
   const q = searchParams.get('q');
+  const { data: posts } = useGetPostsBySearch(q);
 
   return (
     <>
@@ -17,7 +17,7 @@ const SearchPage: FC = () => {
           <p className='ml-6 lg:text-lg'>{posts.length} posts</p>
         </h1>
 
-        <PaginatedPostList />
+        <PaginatedPostList posts={posts} />
       </div>
     </>
   );
