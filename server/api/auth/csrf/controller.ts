@@ -1,5 +1,5 @@
 import { defineController } from './$relay';
 
 export default defineController(() => ({
-  get: ({ csrfToken }) => ({ status: 200, body: { csrfToken } }),
+  get: ({ csrfToken }) => ({ status: 200, body: csrfToken }),
 }));

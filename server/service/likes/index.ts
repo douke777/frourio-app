@@ -8,9 +8,9 @@ import { prisma, handlePrismaError } from '..';
 
 export const getLike = depend(
   { prisma },
-  ({ prisma }, userId: User['id'], postId: Post['id']): ResultAsync<Like, Err> => {
+  ({ prisma }, userId: User['id'], postId: Post['id']): ResultAsync<Like | null, Err> => {
     return ResultAsync.fromPromise(
-      prisma.like.findFirstOrThrow({
+      prisma.like.findFirst({
         where: {
           userId,
           postId,

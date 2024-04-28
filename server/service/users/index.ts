@@ -3,7 +3,7 @@ import { ResultAsync } from 'neverthrow';
 import { depend } from 'velona';
 
 import { Err } from '$/lib/error';
-import { CreatingUser } from '$/types/users';
+import { CreatingUser, UserWithDetails } from '$/types/users';
 
 import { prisma, handlePrismaError } from '..';
 
@@ -16,6 +16,37 @@ export const getUserById = depend(
       prisma.user.findUniqueOrThrow({
         where: {
           id: userId,
+        },
+      }),
+      (e) => handlePrismaError(e),
+    );
+  },
+);
+
+export const getUserWithDetails = depend(
+  { prisma },
+  ({ prisma }, userId: User['id']): ResultAsync<UserWithDetails, Err> => {
+    return ResultAsync.fromPromise(
+      prisma.user.findUniqueOrThrow({
+        where: {
+          id: userId,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
+          profile: {
+            select: {
+              bio: true,
+            },
+          },
+          posts: {
+            take: 6,
+            orderBy: {
+              id: 'desc',
+            },
+          },
         },
       }),
       (e) => handlePrismaError(e),

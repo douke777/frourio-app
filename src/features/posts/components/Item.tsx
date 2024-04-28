@@ -18,7 +18,7 @@ export const PostItem: FC<Props> = memo(({ post }) => {
     <div className='card w-96 bg-base-100 shadow-xl'>
       <div className='card-body'>
         <h2 className={`card-title ${styles.title}`}>{post.title}</h2>
-        <Link to={`/category/${post.categorySlug}`}>
+        <Link to={`/categories/${post.categorySlug}`}>
           <a className='text-xs text-blue-500'>
             <Icon icon={faFolder} className='mx-1' />
             {post.categorySlug}

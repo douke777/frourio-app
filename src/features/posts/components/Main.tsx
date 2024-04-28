@@ -3,14 +3,15 @@ import { Link } from 'react-router-dom';
 
 import { Avatar, SkeltonAvatar } from '@/components/Element/Avatar';
 
-import { Post } from '../types';
+import { PostWithDetails } from '$/types';
 
 type Props = {
-  post: Post;
+  post: PostWithDetails;
 };
 
 export const PostMain: FC<Props> = memo(({ post }) => {
-  const { id, name, image, createdAt } = post.user;
+  const { author, createdAt } = post;
+  const { id, name, image } = author;
 
   return (
     <div>
@@ -21,7 +22,7 @@ export const PostMain: FC<Props> = memo(({ post }) => {
           <div className='flex justify-between'>
             <div className='card-actions'>
               <div className='badge-outline badge'>
-                <Link to={`/category/${post.categorySlug}`}>
+                <Link to={`/categories/${post.categorySlug}`}>
                   <a>{post.categorySlug}</a>
                 </Link>
               </div>

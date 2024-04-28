@@ -1,40 +1,12 @@
-import { useCallback } from 'react';
+import { PostWithDetails } from '$/types';
 
-import { errorToast } from '@/libs/toast';
+import { useGetLikeQuery, useToggleLikeMutation } from '../api';
 
-import { useFetch } from '@/hooks/useFetch';
+export const useLike = (post: PostWithDetails) => {
+  // TODO:サーバーからのエラーメッセージを表示するためのステートが必要
+  const postId = post.id;
+  const { data } = useGetLikeQuery(postId);
+  const { trigger: toggleLike, isMutating } = useToggleLikeMutation(postId);
 
-import { PostWithUser } from 'types/post.type';
-
-type ReqBody = {
-  like: boolean;
-  postId: string;
-};
-
-export const useLike = (post: PostWithUser) => {
-  // getLike
-  const { data, mutate } = useFetch(`/api/like/get?postId=${post.id}`);
-
-  // createLike
-  const handleLike = useCallback(async (): Promise<void> => {
-    const body: ReqBody = {
-      like: !data.like,
-      postId: post.id,
-    };
-
-    try {
-      const res = await fetch('/api/like/toggle', {
-        method: 'POST',
-        body: JSON.stringify(body),
-        headers: { 'Content-Type': 'application/json' },
-      });
-      if (!res.ok) throw new Error('Failed');
-      mutate();
-    } catch (err) {
-      console.error(err);
-      errorToast('Failed');
-    }
-  }, [data, post.id, mutate]);
-
-  return { data, handleLike };
+  return { data, isMutating, toggleLike };
 };

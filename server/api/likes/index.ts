@@ -1,12 +1,13 @@
-import { Post, User } from '@prisma/client';
+import { Post } from '@prisma/client';
 
 import type { DefineMethods } from 'aspida';
 
 export type Methods = DefineMethods<{
   get: {
-    query: { userId: User['id']; postId: Post['id'] };
+    query: { postId: Post['id'] };
+    resBody: boolean;
   };
   post: {
-    reqBody: { userId: User['id']; postId: Post['id'] };
+    reqBody: { postId: Post['id'] };
   };
 }>;

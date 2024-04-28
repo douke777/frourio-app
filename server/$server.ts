@@ -18,6 +18,7 @@ import controllerFn_1n5xz46 from 'api/auth/csrf/controller';
 import controllerFn_q9g69d from 'api/auth/login/controller';
 import controllerFn_18yti from 'api/auth/logout/controller';
 import controllerFn_wrryh8 from 'api/auth/signup/controller';
+import controllerFn_1zjx1j from 'api/auth/verify/controller';
 import controllerFn_1qdo4lx from 'api/categories/controller';
 import controllerFn_1chl5mw from 'api/categories/_categoryId/controller';
 import controllerFn_1c8eilo from 'api/hi/controller';
@@ -190,6 +191,7 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   const controller_q9g69d = controllerFn_q9g69d(fastify);
   const controller_18yti = controllerFn_18yti(fastify);
   const controller_wrryh8 = controllerFn_wrryh8(fastify);
+  const controller_1zjx1j = controllerFn_1zjx1j(fastify);
   const controller_1qdo4lx = controllerFn_1qdo4lx(fastify);
   const controller_1chl5mw = controllerFn_1chl5mw(fastify);
   const controller_1c8eilo = controllerFn_1c8eilo(fastify);
@@ -255,6 +257,15 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   );
 
   fastify.get(
+    `${basePath}/auth/verify`,
+    {
+      onRequest: controller_1zjx1j.get.hooks.onRequest,
+      preParsing: hooks_1m6qgto.preParsing,
+    } as RouteShorthandOptions,
+    asyncMethodToHandler(controller_1zjx1j.get.handler),
+  );
+
+  fastify.get(
     `${basePath}/categories`,
     {
       preParsing: hooks_1m6qgto.preParsing,
@@ -287,7 +298,7 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
     {
       onRequest: hooks_162n5ob.onRequest,
       preParsing: hooks_1m6qgto.preParsing,
-      preValidation: parseNumberTypeQueryParams([['userId', false, false], ['postId', false, false]]),
+      preValidation: parseNumberTypeQueryParams([['postId', false, false]]),
     } as RouteShorthandOptions,
     asyncMethodToHandler(controller_pcjixt.get),
   );

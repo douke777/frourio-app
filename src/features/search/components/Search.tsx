@@ -7,13 +7,13 @@ import { useNavigate } from 'react-router';
 type Inputs = {
   q: string | null;
 };
-
+// TODO: hooksに移行
 export const SearchForm: FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const q = searchParams.get('q');
 
-  const { register, handleSubmit, reset } = useForm<Inputs>({
+  const { register, handleSubmit } = useForm<Inputs>({
     defaultValues: { q },
   });
 
@@ -22,7 +22,6 @@ export const SearchForm: FC = () => {
       pathname: '/search',
       search: `?q=${data.q}`,
     });
-    reset();
   };
 
   return (

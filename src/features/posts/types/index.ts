@@ -1,3 +1,4 @@
+// TODO: delete this
 export type Post = {
   id: number;
   title: string;

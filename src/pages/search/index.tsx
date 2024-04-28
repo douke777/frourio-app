@@ -1,13 +1,13 @@
 import { FC } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { useGetPostsBySearch } from '@/features/posts/api/getPostsBySearch';
+import { useGetPostsBySearchQuery } from '@/features/posts/api/getPostsBySearch';
 import { PaginatedPostList } from '@/features/posts/components/PaginatedList';
 
 const SearchPage: FC = () => {
   const [searchParams] = useSearchParams();
   const q = searchParams.get('q');
-  const { data: posts } = useGetPostsBySearch(q);
+  const { data: posts } = useGetPostsBySearchQuery(q);
 
   return (
     <>

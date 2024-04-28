@@ -4,12 +4,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { EditingUserWithProfile } from '$/types/profiles';
 import { convert, resolve } from '@/utils';
 
-import { useGetUserWithProfile } from '../api/getUserWithProfile';
-import { useUpsertProfile } from '../api/upsertProfile';
-
-import { EditingUserWithProfile } from '$/types/profiles';
+import { useGetUserWithProfileQuery, useUpsertProfileMutation } from '../api';
 
 const schema = z.object({
   name: z.string().min(1),
@@ -17,8 +15,9 @@ const schema = z.object({
 }) satisfies z.ZodType<EditingUserWithProfile>;
 
 export const useEditProfile = () => {
-  const { data } = useGetUserWithProfile();
-  const { trigger: upsertProfile, isMutating } = useUpsertProfile();
+  // TODO:サーバーからのエラーメッセージを表示するためのステートが必要
+  const { data } = useGetUserWithProfileQuery();
+  const { trigger: upsertProfile, isMutating } = useUpsertProfileMutation();
 
   const {
     register,

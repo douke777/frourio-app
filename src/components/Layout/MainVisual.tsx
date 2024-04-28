@@ -1,10 +1,9 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-// import { useSession } from 'next-auth/client';
+
+import useStore from '@/stores/session';
 
 export const MainVisual = () => {
-  // const [session] = useSession();
-  const [session] = useState(true);
+  const session = useStore((state) => state.session);
 
   return (
     <div
@@ -19,7 +18,7 @@ export const MainVisual = () => {
         <div className=''>
           <h1 className='mb-5 text-5xl font-bold'>Job offers</h1>
           <p className='mb-5'>Let&#39;s offer the job and wait for the pros to apply!</p>
-          <Link to={session ? '/posts/new' : '/auth/signin'}>
+          <Link to={session ? '/posts/new' : '/auth/login'}>
             <a className='btn-primary btn'>Get Started</a>
           </Link>
         </div>

@@ -4,9 +4,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import useLoadingStore from '@/stores/loading';
-
+import { SignUpDto } from '$/types/auth';
 import { convert, resolve } from '@/utils';
+
+import { useSignUpMutation } from '../api';
 
 type ErrorMessage = string | undefined;
 
@@ -20,63 +21,35 @@ const schema = z
   .refine((data) => data.email.includes('@'), {
     message: 'Please enter email',
     path: ['email'],
-  });
-
-type Inputs = z.infer<typeof schema>;
+  }) satisfies z.ZodType<SignUpDto>;
 
 export const useSignUp = () => {
-  const [image, setImage] = useState<string>('/avatar-default.png');
   const [errorMessage, setErrorMessage] = useState<ErrorMessage>('');
 
-  const toggleLoading = useLoadingStore((state) => state.toggleLoading);
+  const [image, setImage] = useState<string>('/avatar-default.png');
+  const updateImage = (e: ChangeEvent<HTMLSelectElement>) => setImage(e.target.value);
+
+  const { trigger: signUp, isMutating } = useSignUpMutation();
 
   const {
     register,
     handleSubmit: originalHandleSubmit,
     formState: { errors },
-  } = useForm<Inputs>({
+  } = useForm<SignUpDto>({
     resolver: zodResolver(schema),
   });
 
-  const updateImage = (e: ChangeEvent<HTMLSelectElement>) => setImage(e.target.value);
-
-  const signUp: SubmitHandler<Inputs> = useCallback(
-    async (data) => {
-      toggleLoading();
-
-      // try {
-      //   const body = { ...data, image };
-      //   const res = await fetch('/api/user/create', {
-      //     method: 'POST',
-      //     body: JSON.stringify(body),
-      //     headers: { 'Content-Type': 'application/json' },
-      //   });
-      //   if (!res.ok) {
-      //     const { message } = await res.json();
-      //     throw new Error(message);
-      //   }
-
-      //   setErrorMessage('');
-      //   await signIn('credentials', {
-      //     callbackUrl: '/',
-      //     email: data.email,
-      //     password: data.password,
-      //   });
-      // } catch (err) {
-      //   console.error(err.message);
-      //   setErrorMessage(err.message);
-      // } finally {
-      //   toggleLoading();
-      // }
-    },
-    [toggleLoading, image],
+  const handleSubmit: SubmitHandler<SignUpDto> = useCallback(
+    async (data) => signUp(data),
+    [signUp],
   );
 
   return {
+    isMutating,
     image,
     errorMessage,
     updateImage,
-    handleSubmit: originalHandleSubmit(signUp),
+    onSubmit: originalHandleSubmit(handleSubmit),
     fieldValues: {
       image: convert(register('image')),
       name: convert(register('name')),

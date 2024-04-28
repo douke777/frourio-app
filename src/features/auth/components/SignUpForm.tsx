@@ -12,11 +12,12 @@ import { FormWrapper } from '@/components/Form';
 import { AVATARS } from '../constants/avatars';
 
 export const SignUpForm: FC = memo(() => {
-  const { image, errorMessage, updateImage, handleSubmit, fieldValues, errors } = useSignUp();
+  const { isMutating, image, errorMessage, updateImage, onSubmit, fieldValues, errors } =
+    useSignUp();
 
   return (
     <FormWrapper title='Sign Up'>
-      <form className='card-body' onSubmit={handleSubmit}>
+      <form className='card-body' onSubmit={onSubmit}>
         <div className='flex w-full flex-col items-center justify-center'>
           <Avatar
             src={image}
@@ -60,13 +61,13 @@ export const SignUpForm: FC = memo(() => {
         />
         <ErrorMessage errorMessage={errorMessage} className='text-center' testId='errorMessage' />
 
-        <SubmitButton className='mt-2' color='primary' value='Sign Up' />
+        <SubmitButton className='mt-2' color='primary' value='Sign Up' isLoading={isMutating} />
 
         <div className='mt-4'>
           <p className='text-sm text-gray-400'>
             Do you have an account yet?
-            <Link to='/auth/signin'>
-              <a className='underline'>Sign In</a>
+            <Link to='/auth/login'>
+              <a className='underline'>Login</a>
             </Link>
           </p>
         </div>

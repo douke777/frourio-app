@@ -8,7 +8,7 @@ export default defineController({ getLike, toggleLike }, ({ getLike, toggleLike 
     const result = getLike(userId, postId);
 
     return result.match(
-      () => ({ status: 200 }),
+      (like) => ({ status: 200, body: like ? true : false }),
       (error) => {
         throw error;
       },

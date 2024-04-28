@@ -1,23 +1,23 @@
 import { FC, memo } from 'react';
 import { Link } from 'react-router-dom';
 
-import { useSignIn } from '@/features/auth/hooks/useSignIn';
+import { useLogin } from '@/features/auth/hooks/useLogin';
 
 import { SubmitButton } from '@/components/Element/Button';
 import { ErrorMessage } from '@/components/Element/Error';
 import { InputField } from '@/components/Element/Field';
 import { FormWrapper } from '@/components/Form';
 
-export const SignInForm: FC = memo(() => {
-  const { errorMessage, handleSubmit, fieldValues, errors } = useSignIn();
+export const LoginForm: FC = memo(() => {
+  const { isMutating, errorMessage, onSubmit, fieldValues, errors } = useLogin();
 
   return (
-    <FormWrapper title='Sign In'>
+    <FormWrapper title='Login'>
       <form
         className='card-body'
         method='post'
         action='/api/auth/callback/credentials'
-        onSubmit={handleSubmit}
+        onSubmit={onSubmit}
       >
         <InputField
           {...fieldValues.email}
@@ -41,7 +41,7 @@ export const SignInForm: FC = memo(() => {
         </label>
         <ErrorMessage errorMessage={errorMessage} className='text-center' testId='errorMessage' />
 
-        <SubmitButton className='mt-2' color='primary' value='Sign In' />
+        <SubmitButton className='mt-2' color='primary' value='Login' isLoading={isMutating} />
 
         <div className='mt-4'>
           <p className='text-sm text-gray-400'>

@@ -1,31 +1,28 @@
 import { FC } from 'react';
 
-import { useCategories } from '@/features/categories/api/getCategories';
-import { usePost } from '@/features/posts/hooks/usePost';
-import { Post } from '@/features/posts/types';
+import { useGetCategoriesQuery } from '@/features/categories/api';
 
 import { SubmitButton } from '@/components/Element/Button';
 import { InputField, SelectField, TextareaField } from '@/components/Element/Field';
 import { FormWrapper } from '@/components/Form';
 
+import { usePost } from '../hooks/usePost';
+
 type Props = {
   type: 'CREATE' | 'UPDATE';
-  post?: Post;
 };
 
-export const PostForm: FC<Props> = ({ type, post }) => {
-  // TODO: get session
-  const { handleSubmit, fieldValues, errors } = usePost({
+export const PostForm: FC<Props> = ({ type }) => {
+  const { isMutating, onSubmit, fieldValues, errors } = usePost({
     type,
-    post,
   });
 
-  const { data: categories } = useCategories();
+  const { data: categories } = useGetCategoriesQuery();
 
   return (
     <>
       <FormWrapper title={`${type} POST`}>
-        <form className='card-body' onSubmit={handleSubmit}>
+        <form className='card-body' onSubmit={onSubmit}>
           <InputField
             {...fieldValues.title}
             errors={errors.title}
@@ -44,18 +41,14 @@ export const PostForm: FC<Props> = ({ type, post }) => {
 
           <SelectField {...fieldValues.categorySlug} errors={errors.categorySlug} label='Category'>
             <option value=''>Please Select</option>
-            {categories?.map(({ slug }) => {
-              if (slug === 'new arrivals') return;
-
-              return (
-                <option key={slug} value={slug}>
-                  {slug}
-                </option>
-              );
-            })}
+            {categories.map(({ slug }) => (
+              <option key={slug} value={slug}>
+                {slug}
+              </option>
+            ))}
           </SelectField>
 
-          <SubmitButton className='mt-6' color='primary' value={type} />
+          <SubmitButton className='mt-6' color='primary' value={type} isLoading={isMutating} />
         </form>
       </FormWrapper>
     </>

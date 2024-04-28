@@ -1,25 +1,29 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { Link } from 'react-router-dom';
 
-// import { signOut, useSession } from 'next-auth/client';
-
+import { useLogoutMutation } from '@/features/auth/api';
 import { SearchForm } from '@/features/search/components/Search';
 
-import { SkeltonAvatar } from '../Element/Avatar';
+import useStore from '@/stores/session';
+
+import { Avatar, SkeltonAvatar } from '../Element/Avatar';
 
 export const Navbar: FC = () => {
-  const [session] = useState(true);
-  const signOut = () => console.log('Sign Out');
+  const { trigger: logout } = useLogoutMutation();
+  const session = useStore((state) => state.session);
 
   const avatar = session ? (
-    // <Avatar src={session.user.image} size={100} className='w-10' />
-    <SkeltonAvatar />
+    <Avatar
+      src={session.image ? session.image : '/avatar-default.png'}
+      size={100}
+      className='w-10'
+    />
   ) : (
     <SkeltonAvatar />
   );
 
   return (
-    <div className='navbar w-full bg-base-300'>
+    <div className='navbar w-full bg-base-300 z-50'>
       <div className='flex-none'>
         <label htmlFor='my-drawer-3' className='btn-ghost btn-square btn'>
           <svg
@@ -63,24 +67,19 @@ export const Navbar: FC = () => {
               </Link>
             </li>
             <li>
-              <Link to='/mypage'>
-                <a>My Page</a>
+              <Link to='/my/profile'>
+                <a>My Profile</a>
               </Link>
             </li>
             <li>
-              <Link to='/mypage/settings'>
-                <a>Settings</a>
-              </Link>
-            </li>
-            <li>
-              <button onClick={() => signOut()}>Sign Out</button>
+              <button onClick={() => logout()}>Logout</button>
             </li>
           </ul>
         </div>
       ) : (
         <>
-          <Link to='/auth/signin'>
-            <a className='btn'>Sign In</a>
+          <Link to='/auth/login'>
+            <a className='btn'>Login</a>
           </Link>
         </>
       )}

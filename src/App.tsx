@@ -1,5 +1,5 @@
 import { Suspense, useEffect } from 'react';
-import { useNavigate, useRoutes } from 'react-router-dom';
+import { useLocation, useNavigate, useRoutes } from 'react-router-dom';
 
 import axios, { AxiosError } from 'axios';
 import { ToastContainer } from 'react-toastify';
@@ -15,17 +15,27 @@ import { errorToast } from '@/lib/toast';
 import { Loading } from '@/components/Element/Loading';
 import { Layout } from '@/components/Layout/Layout';
 
+import useStore from './stores/session';
+
 import routes from '~react-pages'; // NOTE: filebased routingを行うために、pages/はdefault exportが必要
 
 export default function App() {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const setSession = useStore((state) => state.setSession);
 
   useEffect(() => {
     (async () => {
-      const { csrfToken } = await apiClient.auth.csrf.$get();
+      const csrfToken = await apiClient.auth.csrf.$get();
       axios.defaults.headers.common['csrf-token'] = csrfToken;
+
+      // TODO ある程度swrでcacheでもいいのかも
+      await apiClient.auth.verify
+        .$get()
+        .then((user) => setSession(user))
+        .catch(() => setSession(null));
     })();
-  }, []);
+  }, [setSession, pathname]);
 
   return (
     <>
@@ -39,7 +49,7 @@ export default function App() {
 
             errorToast(data.message);
             if (err.response?.status === 401 || err.response?.status === 403) {
-              navigate('/');
+              navigate('/auth/login');
             }
           },
         }}

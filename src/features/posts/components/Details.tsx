@@ -1,33 +1,21 @@
-// import { useSession } from 'next-auth/client';
 import { memo, FC } from 'react';
 
-import { LikeButton } from '@/components/Element/Button/LikeButton';
+import { LikeButton } from '@/features/likes/components/LikeButton';
+
+import useStore from '@/stores/session';
+
+import { PostWithDetails } from '$/types';
 
 import { ApplyForm } from './ApplyForm';
 import { ConstApplication } from './ConstApplication';
 import { PostMain } from './Main';
 
-export const PostDetails: FC = memo(() => {
-  // const [session] = useSession();
-  const session = true;
+type Props = {
+  post: PostWithDetails;
+};
 
-  const post = {
-    id: 5,
-    title: 'ホタテ',
-    content: '食べたい',
-    published: true,
-    authorId: 1,
-    categorySlug: 'programming',
-    createdAt: '2024-02-11T11:57:24.444Z',
-    updatedAt: '2024-02-11T11:57:24.444Z',
-    user: {
-      id: 1,
-      email: 'admin@gmail.com',
-      image: '',
-      createdAt: '2024-02-11T11:57:24.444Z',
-      updatedAt: '2024-02-11T11:57:24.444Z',
-    },
-  };
+export const PostDetails: FC<Props> = memo(({ post }) => {
+  const session = useStore((state) => state.session);
 
   return (
     <div className='border'>

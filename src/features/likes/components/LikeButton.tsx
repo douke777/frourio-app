@@ -2,22 +2,26 @@ import { FC, memo } from 'react';
 
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
-import { Post } from '@/features/posts/types';
+import { Session } from '@/stores/session';
 
-import { Icon } from '../Icon';
+import { Icon } from '@/components/Element/Icon';
+
+import { PostWithDetails } from '$/types';
+
+import { useLike } from '../hooks/useLike';
 
 type Props = {
-  session: true;
-  post: Post;
+  post: PostWithDetails;
+  session: Session;
 };
 
-export const LikeButton: FC<Props> = memo(({ session, post }) => {
-  const data = { like: true };
+export const LikeButton: FC<Props> = memo(({ post, session }) => {
+  const { data: like, toggleLike } = useLike(post);
 
-  const activeLikeClassName = data?.like
+  const activeLikeClassName = like
     ? 'text-red-500 border-red-500 hover:opacity-50'
     : 'text-gray-400 border-gray-400';
-  const activeLikeIconClassName = data?.like ? 'text-red-500' : '';
+  const activeLikeIconClassName = like ? 'text-red-500' : '';
 
   return (
     <>
@@ -25,7 +29,7 @@ export const LikeButton: FC<Props> = memo(({ session, post }) => {
         <div className='flex h-14 items-center justify-end'>
           <button
             className={`mr-2 flex items-center justify-center rounded-full border p-2 hover:opacity-50 focus:outline-none ${activeLikeClassName}`}
-            // onClick={handleLike}
+            onClick={() => toggleLike()}
           >
             <Icon icon={faHeart} className={activeLikeIconClassName} />
           </button>

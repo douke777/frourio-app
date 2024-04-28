@@ -2,10 +2,10 @@ import { FC } from 'react';
 import { Link } from 'react-router-dom';
 
 import { SearchForm } from '../../search/components/Search';
-import { useCategories } from '../api/getCategories';
+import { useGetCategoriesQuery } from '../api';
 
 export const DrawerSide: FC = () => {
-  const { data: categories } = useCategories();
+  const { data: categories } = useGetCategoriesQuery();
 
   return (
     <div className='drawer-side'>

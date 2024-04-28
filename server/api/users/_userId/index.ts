@@ -1,10 +1,10 @@
-import { User } from '@prisma/client';
+import { UserWithDetails } from '$/types';
 
 import type { DefineMethods } from 'aspida';
 
 export type Methods = DefineMethods<{
   get: {
-    resBody: User;
+    resBody: UserWithDetails;
   };
   patch: {
     reqBody: {

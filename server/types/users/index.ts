@@ -1,4 +1,4 @@
-import { User as PrismaUser } from '@prisma/client';
+import { Prisma, User as PrismaUser } from '@prisma/client';
 
 export type CreatingUser = {
   name: string;
@@ -13,3 +13,18 @@ export type EditingUser = CreatingUser & {
 
 type OmittedProps = 'password' | 'role' | 'active';
 export type User = Omit<PrismaUser, OmittedProps>;
+
+export type UserWithDetails = Prisma.UserGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    email: true; // TODO: いらんかも
+    image: true;
+    profile: {
+      select: {
+        bio: true;
+      };
+    };
+    posts: true;
+  };
+}>;
