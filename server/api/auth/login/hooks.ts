@@ -9,15 +9,24 @@ export type AdditionalRequest = {
 };
 
 export default defineHooks((app) => ({
-  preHandler: async (req, reply) => {
+  preHandler: (req, reply, done) => {
     if (!req.body) throw new BadRequestError();
 
-    const jwt = await login(app, req.body);
-    reply.setCookie('access_token', jwt.accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-      path: '/',
-    });
+    const result = login(app, req.body);
+
+    result.match(
+      (jwt) => {
+        reply.setCookie('access_token', jwt.accessToken, {
+          httpOnly: true,
+          secure: true,
+          sameSite: 'none',
+          path: '/',
+        });
+        done();
+      },
+      (error) => {
+        reply.send(error);
+      },
+    );
   },
 }));

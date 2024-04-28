@@ -1,12 +1,11 @@
 import { User } from '@prisma/client';
-import { compare } from 'bcryptjs';
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import { ResultAsync } from 'neverthrow';
+import { ResultAsync, okAsync, errAsync } from 'neverthrow';
 import { depend } from 'velona';
 
-import { Err } from '$/lib/error';
+import { BadRequestError, Err } from '$/lib/error';
 import { Jwt, SignUpDto, LoginDto } from '$/types/auth';
-import { hashPassword } from '$/utils/auth';
+import { hashPassword, verifyPassword } from '$/utils/auth';
 
 import { handlePrismaError, prisma } from '..';
 
@@ -33,18 +32,24 @@ export const signUp = depend({ prisma }, ({ prisma }, dto: SignUpDto): ResultAsy
 
 export const login = depend(
   { prisma },
-  async ({ prisma }, app: FastifyInstance, dto: LoginDto): Promise<Jwt> => {
-    const user = await prisma.user.findUnique({
-      where: {
-        email: dto.email,
-      },
-    });
-    // TODO: throw new error。 Email or password incorrect
-    if (!user) throw new Error('Email or password incorrect');
-    const isValid = await compare(dto.password, user.password);
-    if (!isValid) throw new Error('Email or password incorrect');
-
-    return generateJwt(app, user.id, user.email);
+  ({ prisma }, app: FastifyInstance, dto: LoginDto): ResultAsync<Jwt, Err> => {
+    return ResultAsync.fromPromise(
+      prisma.user.findUniqueOrThrow({
+        where: {
+          email: dto.email,
+        },
+      }),
+      (e) => handlePrismaError(e),
+    )
+      .andThen((user) =>
+        ResultAsync.fromPromise(
+          verifyPassword(dto.password, user.password).then((isValid) => (isValid ? user : null)),
+          (e) => handlePrismaError(e),
+        ),
+      )
+      .andThen((user) =>
+        user ? okAsync(generateJwt(app, user.id, user.email)) : errAsync(new BadRequestError()),
+      );
   },
 );
 
