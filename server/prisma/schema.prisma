@@ -31,7 +31,7 @@ enum Role {
 model Profile {
   id     Int     @id @default(autoincrement())
   bio    String?
-  user   User    @relation(fields: [userId], references: [id])
+  user   User    @relation(fields: [userId], references: [id]) // TODO: Cascade delete
   userId Int     @unique
 }
 
