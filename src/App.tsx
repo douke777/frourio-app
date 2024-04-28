@@ -28,8 +28,11 @@ export default function App() {
     (async () => {
       const csrfToken = await apiClient.auth.csrf.$get();
       axios.defaults.headers.common['csrf-token'] = csrfToken;
+    })();
+  }, []);
 
-      // TODO ある程度swrでcacheでもいいのかも
+  useEffect(() => {
+    (async () => {
       await apiClient.auth.verify
         .$get()
         .then((user) => setSession(user))
