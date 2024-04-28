@@ -67,9 +67,9 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
       },
       signup: {
         post: (option: { body: Methods_1yes9ht['post']['reqBody'], config?: T | undefined }) =>
-          fetch(prefix, PATH4, POST, option).send(),
+          fetch<Methods_1yes9ht['post']['resBody']>(prefix, PATH4, POST, option).json(),
         $post: (option: { body: Methods_1yes9ht['post']['reqBody'], config?: T | undefined }) =>
-          fetch(prefix, PATH4, POST, option).send().then(r => r.body),
+          fetch<Methods_1yes9ht['post']['resBody']>(prefix, PATH4, POST, option).json().then(r => r.body),
         $path: () => `${prefix}${PATH4}`,
       },
       verify: {

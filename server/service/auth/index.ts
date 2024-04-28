@@ -1,38 +1,34 @@
-import { Prisma, User } from '@prisma/client';
-import { compare, hash } from 'bcryptjs';
+import { User } from '@prisma/client';
+import { compare } from 'bcryptjs';
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import { ResultAsync } from 'neverthrow';
 import { depend } from 'velona';
 
-import { Jwt, Msg, SignUpDto, LoginDto } from '$/types/auth';
+import { Err } from '$/lib/error';
+import { Jwt, SignUpDto, LoginDto } from '$/types/auth';
+import { hashPassword } from '$/utils/auth';
 
-import { prisma } from '..';
+import { handlePrismaError, prisma } from '..';
 
-export const signUp = depend({ prisma }, async ({ prisma }, dto: SignUpDto): Promise<Msg> => {
-  const hashedPassword = await hash(dto.password, 12);
-  try {
-    await prisma.user.create({
-      data: {
-        name: dto.name,
-        email: dto.email,
-        password: hashedPassword,
-        profile: {
-          create: {
-            bio: '',
+export const signUp = depend({ prisma }, ({ prisma }, dto: SignUpDto): ResultAsync<User, Err> => {
+  return ResultAsync.fromPromise(hashPassword(dto.password), (e) => handlePrismaError(e)).andThen(
+    (hashedPassword) =>
+      ResultAsync.fromPromise(
+        prisma.user.create({
+          data: {
+            name: dto.name,
+            email: dto.email,
+            password: hashedPassword,
+            profile: {
+              create: {
+                bio: '',
+              },
+            },
           },
-        },
-      },
-    });
-  } catch (err) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      console.log('ERROR_CODE', err.code);
-    }
-  }
-  // TODO: error handling P2002 → すでにUserがあるとき。 This email is already taken
-
-  // TODO: メッセージのreturnいる？
-  return {
-    message: 'ok',
-  };
+        }),
+        (e) => handlePrismaError(e),
+      ),
+  );
 });
 
 export const login = depend(

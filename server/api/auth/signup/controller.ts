@@ -4,8 +4,13 @@ import { defineController } from './$relay';
 
 export default defineController({ signUp }, ({ signUp }) => ({
   post: async ({ body }) => {
-    const result = await signUp(body);
+    const result = signUp(body);
 
-    return { status: 201, message: result.message };
+    return result.match(
+      () => ({ status: 201, body: { message: 'User created' } }),
+      (error) => {
+        throw error;
+      },
+    );
   },
 }));
