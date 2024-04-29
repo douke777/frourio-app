@@ -9,7 +9,7 @@ import styles from './Pagination.module.css';
 
 type Props = {
   pageCount: number;
-  onPageChange: (e: any) => void;
+  onPageChange: (e: { selected: number }) => void;
 };
 
 export const Pagination: FC<Props> = memo(({ pageCount, onPageChange }) => {
