@@ -18,8 +18,8 @@ export const MainVisual = () => {
         <div className=''>
           <h1 className='mb-5 text-5xl font-bold'>Job offers</h1>
           <p className='mb-5'>Let&#39;s offer the job and wait for the pros to apply!</p>
-          <Link to={session ? '/posts/new' : '/auth/login'}>
-            <a className='btn-primary btn'>Get Started</a>
+          <Link to={session ? '/posts/new' : '/auth/login'} className='btn-primary btn'>
+            Get Started
           </Link>
         </div>
       </div>

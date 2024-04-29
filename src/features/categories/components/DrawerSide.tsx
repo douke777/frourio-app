@@ -16,9 +16,7 @@ export const DrawerSide: FC = () => {
         </li>
         {categories?.map(({ slug }) => (
           <li key={slug}>
-            <Link to={`/categories/${slug}`}>
-              <a>{slug.toUpperCase()}</a>
-            </Link>
+            <Link to={`/categories/${slug}`}>{slug.toUpperCase()}</Link>
           </li>
         ))}
       </ul>

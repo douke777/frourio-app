@@ -66,8 +66,8 @@ export const SignUpForm: FC = memo(() => {
         <div className='mt-4'>
           <p className='text-sm text-gray-400'>
             Do you have an account yet?
-            <Link to='/auth/login'>
-              <a className='underline'>Login</a>
+            <Link to='/auth/login' className='underline'>
+              Login
             </Link>
           </p>
         </div>

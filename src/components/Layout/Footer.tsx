@@ -10,8 +10,8 @@ export const Footer: FC = () => {
         <div key={i}>
           <span className='footer-title'>{item.title}</span>
           {item.links.map((link, j) => (
-            <Link key={j} to={link.href}>
-              <a className='link-hover link'>{link.linkTitle}</a>
+            <Link key={j} to={link.href} className='link-hover link'>
+              {link.linkTitle}
             </Link>
           ))}
         </div>

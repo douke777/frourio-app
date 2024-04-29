@@ -22,20 +22,18 @@ export const PostMain: FC<Props> = memo(({ post }) => {
           <div className='flex justify-between'>
             <div className='card-actions'>
               <div className='badge-outline badge'>
-                <Link to={`/categories/${post.categorySlug}`}>
-                  <a>{post.categorySlug}</a>
+                <Link to={`/categories/${post.categorySlug}`} className='hover:opacity-50'>
+                  {post.categorySlug}
                 </Link>
               </div>
             </div>
           </div>
           <div className='flex items-center'>
             <div className='mr-2'>
-              <Link to={`/users/${id}`}>
-                <a className='hover:opacity-50'>
-                  <div className='flex w-full flex-col items-center justify-center'>
-                    {image ? <Avatar src={image} size={60} /> : <SkeltonAvatar />}
-                  </div>
-                </a>
+              <Link to={`/users/${id}`} className='hover:opacity-50'>
+                <div className='flex w-full flex-col items-center justify-center'>
+                  {image ? <Avatar src={image} size={60} /> : <SkeltonAvatar />}
+                </div>
               </Link>
             </div>
             <div>

@@ -35,8 +35,8 @@ export const LoginForm: FC = memo(() => {
           placeholder='password'
         />
         <label className='label'>
-          <Link to='/auth/password'>
-            <a className='link-hover label-text-alt link'>Forgot password?</a>
+          <Link to='/auth/password' className='link-hover label-text-alt link'>
+            Forgot password?
           </Link>
         </label>
         <ErrorMessage errorMessage={errorMessage} className='text-center' testId='errorMessage' />
@@ -46,8 +46,8 @@ export const LoginForm: FC = memo(() => {
         <div className='mt-4'>
           <p className='text-sm text-gray-400'>
             Do you have an account yet?
-            <Link to='/auth/signup'>
-              <a className='underline'>Sign Up</a>
+            <Link to='/auth/signup' className='underline'>
+              Sign Up
             </Link>
           </p>
         </div>

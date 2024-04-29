@@ -43,8 +43,8 @@ export const Navbar: FC = () => {
       </div>
       {/* title */}
       <div className='flex-1'>
-        <Link to='/'>
-          <a className='btn-ghost btn text-xl normal-case'>Crowd Sourcing Demo</a>
+        <Link to='/' className='btn-ghost btn text-xl normal-case'>
+          Crowd Sourcing Demo
         </Link>
       </div>
 
@@ -62,14 +62,10 @@ export const Navbar: FC = () => {
             className='dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow'
           >
             <li>
-              <Link to='/posts/new'>
-                <a>Create Post</a>
-              </Link>
+              <Link to='/posts/new'>Create Post</Link>
             </li>
             <li>
-              <Link to='/my/profile'>
-                <a>My Profile</a>
-              </Link>
+              <Link to='/my/profile'>My Profile</Link>
             </li>
             <li>
               <button onClick={() => logout()}>Logout</button>
@@ -78,8 +74,8 @@ export const Navbar: FC = () => {
         </div>
       ) : (
         <>
-          <Link to='/auth/login'>
-            <a className='btn'>Login</a>
+          <Link to='/auth/login' className='btn'>
+            Login
           </Link>
         </>
       )}

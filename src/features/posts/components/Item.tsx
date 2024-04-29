@@ -18,16 +18,17 @@ export const PostItem: FC<Props> = memo(({ post }) => {
     <div className='card w-96 bg-base-100 shadow-xl'>
       <div className='card-body'>
         <h2 className={`card-title ${styles.title}`}>{post.title}</h2>
-        <Link to={`/categories/${post.categorySlug}`}>
-          <a className='text-xs text-blue-500'>
-            <Icon icon={faFolder} className='mx-1' />
-            {post.categorySlug}
-          </a>
+        <Link
+          to={`/categories/${post.categorySlug}`}
+          className='text-xs text-blue-500 hover:opacity-50'
+        >
+          <Icon icon={faFolder} className='mx-1' />
+          {post.categorySlug}
         </Link>
         <p className={styles.desc}>{post.content}</p>
         <div className='card-actions justify-end'>
-          <Link to={`/posts/${post.id}`}>
-            <a className='btn-primary btn'>Apply</a>
+          <Link to={`/posts/${post.id}`} className='btn-primary btn'>
+            Apply
           </Link>
         </div>
       </div>

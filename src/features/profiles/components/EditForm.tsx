@@ -47,8 +47,8 @@ export const ProfileEditForm: FC = memo(() => {
         </form>
 
         <div className='mb-8 text-center'>
-          <Link to={`/users/${data?.id}`}>
-            <a className='text-gray-500 hover:opacity-50'>View Profile</a>
+          <Link to={`/users/${data?.id}`} className='text-gray-500 hover:opacity-50'>
+            View Profile
           </Link>
         </div>
       </FormWrapper>
