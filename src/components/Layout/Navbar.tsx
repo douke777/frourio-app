@@ -23,7 +23,7 @@ export const Navbar: FC = () => {
   );
 
   return (
-    <div className='navbar w-full bg-base-300 z-50'>
+    <div className='navbar w-full bg-base-300 z-navbar'>
       <div className='flex-none'>
         <label htmlFor='my-drawer-3' className='btn-ghost btn-square btn'>
           <svg

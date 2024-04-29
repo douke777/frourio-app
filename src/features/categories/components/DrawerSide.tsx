@@ -8,7 +8,7 @@ export const DrawerSide: FC = () => {
   const { data: categories } = useGetCategoriesQuery();
 
   return (
-    <div className='drawer-side'>
+    <div className='drawer-side z-drawer-side'>
       <label htmlFor='my-drawer-3' className='drawer-overlay'></label>
       <ul className='menu w-80 bg-base-100 p-4 min-h-full'>
         <li className='md:hidden'>
