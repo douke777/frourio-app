@@ -2,6 +2,7 @@ import { Suspense, useEffect } from 'react';
 import { useLocation, useNavigate, useRoutes } from 'react-router-dom';
 
 import axios, { AxiosError } from 'axios';
+import { ErrorBoundary } from 'react-error-boundary';
 import { ToastContainer } from 'react-toastify';
 
 import 'react-toastify/ReactToastify.min.css';
@@ -18,6 +19,23 @@ import { Layout } from '@/components/Layout/Layout';
 import useStore from './stores/session';
 
 import routes from '~react-pages'; // NOTE: filebased routingを行うために、pages/はdefault exportが必要
+
+const ErrorFallback = () => {
+  return (
+    <div
+      className='text-red-500 w-screen h-screen flex flex-col justify-center items-center'
+      role='alert'
+    >
+      <h2 className='text-lg font-semibold'>Ooops, something went wrong :( </h2>
+      <button
+        className='btn btn-error mt-4'
+        onClick={() => window.location.assign(window.location.origin)}
+      >
+        Refresh
+      </button>
+    </div>
+  );
+};
 
 export default function App() {
   const navigate = useNavigate();
@@ -42,26 +60,44 @@ export default function App() {
 
   return (
     <>
-      <SWRConfig
-        value={{
-          shouldRetryOnError: false,
-          revalidateOnFocus: false,
-          onError: (err: AxiosError) => {
-            const data = err.response?.data as ErrorResponseData | undefined;
-            if (!data) return;
-
-            errorToast(data.message);
-            if (err.response?.status === 401 || err.response?.status === 403) {
-              navigate('/auth/login');
-            }
-          },
-        }}
+      <Suspense
+        fallback={
+          <div className='flex items-center justify-center w-screen h-screen'>
+            <Loading />
+          </div>
+        }
       >
-        <ToastContainer />
-        <Layout>
-          <Suspense fallback={<Loading />}>{useRoutes(routes)}</Suspense>
-        </Layout>
-      </SWRConfig>
+        <ErrorBoundary fallback={<ErrorFallback />}>
+          <SWRConfig
+            value={{
+              shouldRetryOnError: false,
+              revalidateOnFocus: false,
+              onError: (err: AxiosError) => {
+                const data = err.response?.data as ErrorResponseData | undefined;
+                if (!data) return;
+
+                errorToast(data.message);
+                if (err.response?.status === 401 || err.response?.status === 403) {
+                  navigate('/auth/login');
+                }
+              },
+            }}
+          >
+            <ToastContainer />
+            <Layout>
+              <Suspense
+                fallback={
+                  <div className='h-full w-full flex items-center justify-center'>
+                    <Loading />
+                  </div>
+                }
+              >
+                {useRoutes(routes)}
+              </Suspense>
+            </Layout>
+          </SWRConfig>
+        </ErrorBoundary>
+      </Suspense>
     </>
   );
 }
