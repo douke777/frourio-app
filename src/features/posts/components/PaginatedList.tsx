@@ -1,7 +1,6 @@
-import { useEffect, useState, useCallback, memo, FC, Suspense } from 'react';
+import { useEffect, useState, useCallback, memo, FC } from 'react';
 
 import { ConstMessage } from '@/components/Element/Const';
-import { Loading } from '@/components/Element/Loading';
 
 import { PostWithDetails } from '$/types';
 
@@ -40,12 +39,10 @@ export const PaginatedPostList: FC<Props> = memo(({ posts }) => {
   let content;
   if (posts.length) {
     content = (
-      <Suspense fallback={<Loading />}>
-        <div className='mb-8'>
-          <PostList posts={slice} className='mr-2 grid grid-cols-1 gap-4 md:grid-cols-2 lg:mr-0' />
-          <Pagination pageCount={pageCount} onPageChange={handlePageClick} />
-        </div>
-      </Suspense>
+      <div className='mb-8'>
+        <PostList posts={slice} className='mr-2 grid grid-cols-1 gap-4 md:grid-cols-2 lg:mr-0' />
+        <Pagination pageCount={pageCount} onPageChange={handlePageClick} />
+      </div>
     );
   } else {
     content = <ConstMessage message='No posts yet' />;
