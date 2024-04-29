@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useRoutes } from 'react-router-dom';
 
 import axios, { AxiosError } from 'axios';
 import { ErrorBoundary } from 'react-error-boundary';
+import { HelmetProvider } from 'react-helmet-async';
 import { ToastContainer } from 'react-toastify';
 
 import 'react-toastify/ReactToastify.min.css';
@@ -68,34 +69,36 @@ export default function App() {
         }
       >
         <ErrorBoundary fallback={<ErrorFallback />}>
-          <SWRConfig
-            value={{
-              shouldRetryOnError: false,
-              revalidateOnFocus: false,
-              onError: (err: AxiosError) => {
-                const data = err.response?.data as ErrorResponseData | undefined;
-                if (!data) return;
+          <HelmetProvider>
+            <SWRConfig
+              value={{
+                shouldRetryOnError: false,
+                revalidateOnFocus: false,
+                onError: (err: AxiosError) => {
+                  const data = err.response?.data as ErrorResponseData | undefined;
+                  if (!data) return;
 
-                errorToast(data.message);
-                if (err.response?.status === 401 || err.response?.status === 403) {
-                  navigate('/auth/login');
-                }
-              },
-            }}
-          >
-            <ToastContainer />
-            <Layout>
-              <Suspense
-                fallback={
-                  <div className='h-full w-full flex items-center justify-center'>
-                    <Loading />
-                  </div>
-                }
-              >
-                {useRoutes(routes)}
-              </Suspense>
-            </Layout>
-          </SWRConfig>
+                  errorToast(data.message);
+                  if (err.response?.status === 401 || err.response?.status === 403) {
+                    navigate('/auth/login');
+                  }
+                },
+              }}
+            >
+              <ToastContainer />
+              <Layout>
+                <Suspense
+                  fallback={
+                    <div className='h-full w-full flex items-center justify-center'>
+                      <Loading />
+                    </div>
+                  }
+                >
+                  {useRoutes(routes)}
+                </Suspense>
+              </Layout>
+            </SWRConfig>
+          </HelmetProvider>
         </ErrorBoundary>
       </Suspense>
     </>
