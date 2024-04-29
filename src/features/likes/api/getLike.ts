@@ -1,9 +1,15 @@
 import useSWR from 'swr';
 
+import { Session } from '@/stores/session';
+
 import apiClient from '@/lib/apiClient';
 
-export const useGetLikeQuery = (postId: number) => {
-  return useSWR(apiClient.likes.$path(), () => apiClient.likes.$get({ query: { postId } }), {
-    suspense: true,
-  });
+export const useGetLikeQuery = (postId: number, session: Session) => {
+  return useSWR(
+    session ? apiClient.likes.$path() : null,
+    () => apiClient.likes.$get({ query: { postId } }),
+    {
+      suspense: true,
+    },
+  );
 };

@@ -16,7 +16,7 @@ type Props = {
 };
 
 export const LikeButton: FC<Props> = memo(({ post, session }) => {
-  const { data: like, toggleLike } = useLike(post);
+  const { data: like, toggleLike } = useLike(post, session);
 
   const activeLikeClassName = like
     ? 'text-red-500 border-red-500 hover:opacity-50'
