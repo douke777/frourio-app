@@ -430,17 +430,5 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
     asyncMethodToHandler(controller_15x3ppx.get),
   );
 
-  fastify.patch(
-    `${basePath}/users/:userId`,
-    {
-      schema: {
-        params: validators_1p3f06i.params,
-      },
-      validatorCompiler,
-      preParsing: hooks_1m6qgto.preParsing,
-    },
-    asyncMethodToHandler(controller_15x3ppx.patch),
-  );
-
   return fastify;
 };

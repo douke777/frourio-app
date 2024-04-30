@@ -21,7 +21,7 @@ export type Csrf = {
 export type Jwt = {
   accessToken: string;
 };
-// FIXME: 一時的なプロパティ
+
 export type JwtPayload = {
   sub: number;
   email: string;
