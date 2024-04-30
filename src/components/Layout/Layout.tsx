@@ -22,7 +22,7 @@ export const Layout: FC<Props> = memo(({ children }) => {
         <div className='drawer-content flex flex-col'>
           <Navbar />
           {pathname === '/' && <MainVisual />}
-          <div className='mx-auto min-h-fit max-w-screen-lg md:min-h-full'>{children}</div>
+          <div className='mx-auto min-h-fit max-w-screen-lg md:min-h-screen'>{children}</div>
           <Footer />
         </div>
         <DrawerSide />
