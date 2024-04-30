@@ -12,7 +12,7 @@ const Post: FC = () => {
   const { data: relatedPosts } = useGetRelatedPostsQuery(postId);
 
   return (
-    <div className='w-screen md:max-w-screen-md lg:mx-4 lg:flex'>
+    <div className='w-screen lg:max-w-screen-lg lg:mx-4 lg:flex'>
       <div className='lg:mr-4 lg:w-7/12'>
         <PostDetails post={post} />
       </div>
