@@ -9,8 +9,6 @@ type Props = Omit<JSX.IntrinsicElements['input'], 'ref'> & {
 };
 
 export const InputField: FC<Props> = ({ label, errors, inputRef, ...inputProps }) => {
-  console.log(inputRef);
-
   return (
     <div className='form-control'>
       <label className='label'>

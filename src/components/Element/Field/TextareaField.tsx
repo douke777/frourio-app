@@ -9,8 +9,6 @@ type Props = Omit<JSX.IntrinsicElements['textarea'], 'ref'> & {
 };
 
 export const TextareaField: FC<Props> = ({ label, errors, inputRef, ...inputProps }) => {
-  // console.log('INPUTPROPS', inputProps);
-
   return (
     <div className='form-control'>
       <label className='label'>
