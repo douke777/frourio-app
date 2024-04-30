@@ -1,34 +1,17 @@
 import { FC } from 'react';
-import { useSearchParams } from 'react-router-dom';
 
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router';
+import { useSearch } from '../hooks/useSearch';
 
-type Inputs = {
-  q: string | null;
-};
-// TODO: hooksに移行
 export const SearchForm: FC = () => {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const q = searchParams.get('q');
-
-  const { register, handleSubmit } = useForm<Inputs>({
-    defaultValues: { q },
-  });
-
-  const searchPosts: SubmitHandler<Inputs> = async (data) => {
-    navigate({
-      pathname: '/search',
-      search: `?q=${data.q}`,
-    });
-  };
+  const { onSubmit, fieldValues } = useSearch();
+  const { inputRef, ...inputProps } = fieldValues.q;
 
   return (
-    <form className='form-control' onSubmit={handleSubmit(searchPosts)}>
+    <form className='form-control' onSubmit={onSubmit}>
       <div className='join'>
         <input
-          {...register('q')}
+          ref={inputRef}
+          {...inputProps}
           type='search'
           placeholder='Search…'
           className='input-bordered input join-item'
