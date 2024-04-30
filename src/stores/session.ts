@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 
-import { User } from '$/types';
+import { SafeUser } from '$/types';
 
-export type Session = User | null;
+export type Session = SafeUser | null;
 
 type State = {
   session: Session;

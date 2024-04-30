@@ -1,4 +1,4 @@
-import { Prisma, User as PrismaUser } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 export type CreatingUser = {
   name: string;
@@ -11,8 +11,14 @@ export type EditingUser = CreatingUser & {
   active: boolean;
 };
 
-type OmittedProps = 'password' | 'role' | 'active';
-export type User = Omit<PrismaUser, OmittedProps>;
+export type SafeUser = Prisma.UserGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    email: true;
+    image: true;
+  };
+}>;
 
 export type UserWithDetails = Prisma.UserGetPayload<{
   select: {

@@ -3,19 +3,23 @@ import { ResultAsync } from 'neverthrow';
 import { depend } from 'velona';
 
 import { Err } from '$/lib/error';
-import { CreatingUser, UserWithDetails } from '$/types/users';
+import { CreatingUser, SafeUser, UserWithDetails } from '$/types/users';
 
 import { prisma, handlePrismaError } from '..';
 
-// TODO: passwordとかをomitする
-
 export const getUserById = depend(
   { prisma },
-  ({ prisma }, userId: User['id']): ResultAsync<User, Err> => {
+  ({ prisma }, userId: User['id']): ResultAsync<SafeUser, Err> => {
     return ResultAsync.fromPromise(
       prisma.user.findUniqueOrThrow({
         where: {
           id: userId,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
         },
       }),
       (e) => handlePrismaError(e),
