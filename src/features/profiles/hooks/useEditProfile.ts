@@ -15,7 +15,6 @@ const schema = z.object({
 }) satisfies z.ZodType<EditingUserWithProfile>;
 
 export const useEditProfile = () => {
-  // TODO:サーバーからのエラーメッセージを表示するためのステートが必要
   const { data } = useGetUserWithProfileQuery();
   const { trigger: upsertProfile, isMutating } = useUpsertProfileMutation();
 

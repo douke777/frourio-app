@@ -21,7 +21,7 @@ const schema = z.object({
   categorySlug: z.string().min(1, { message: 'Please select' }),
 }) satisfies z.ZodType<CreatingPost>;
 
-// TODO: update post
+// TODO: add update post
 export const usePost = () => {
   const { trigger: createPost, isMutating } = useCreatePostMutation();
 

@@ -9,8 +9,6 @@ import { convert, resolve } from '@/utils';
 
 import { useSignUpMutation } from '../api';
 
-type ErrorMessage = string | undefined;
-
 const schema = z
   .object({
     image: z.string().min(1),
@@ -24,8 +22,6 @@ const schema = z
   }) satisfies z.ZodType<SignUpDto>;
 
 export const useSignUp = () => {
-  const [errorMessage, setErrorMessage] = useState<ErrorMessage>('');
-
   const [image, setImage] = useState<string>('/avatar-default.png');
   const updateImage = (e: ChangeEvent<HTMLSelectElement>) => setImage(e.target.value);
 
@@ -47,7 +43,6 @@ export const useSignUp = () => {
   return {
     isMutating,
     image,
-    errorMessage,
     updateImage,
     onSubmit: originalHandleSubmit(handleSubmit),
     fieldValues: {

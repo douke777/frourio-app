@@ -4,12 +4,11 @@ import { Link } from 'react-router-dom';
 import { useLogin } from '@/features/auth/hooks/useLogin';
 
 import { SubmitButton } from '@/components/Element/Button';
-import { ErrorMessage } from '@/components/Element/Error';
 import { InputField } from '@/components/Element/Field';
 import { FormWrapper } from '@/components/Form';
 
 export const LoginForm: FC = memo(() => {
-  const { isMutating, errorMessage, onSubmit, fieldValues, errors } = useLogin();
+  const { isMutating, onSubmit, fieldValues, errors } = useLogin();
 
   return (
     <FormWrapper title='Login'>
@@ -39,7 +38,6 @@ export const LoginForm: FC = memo(() => {
             Forgot password?
           </Link>
         </label>
-        <ErrorMessage errorMessage={errorMessage} className='text-center' testId='errorMessage' />
 
         <SubmitButton className='mt-2' color='primary' value='Login' isLoading={isMutating} />
 

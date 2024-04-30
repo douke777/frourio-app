@@ -5,15 +5,13 @@ import { useSignUp } from '@/features/auth/hooks/useSignUp';
 
 import { Avatar } from '@/components/Element/Avatar';
 import { SubmitButton } from '@/components/Element/Button';
-import { ErrorMessage } from '@/components/Element/Error';
 import { InputField, SelectField } from '@/components/Element/Field';
 import { FormWrapper } from '@/components/Form';
 
 import { AVATARS } from '../constants/avatars';
 
 export const SignUpForm: FC = memo(() => {
-  const { isMutating, image, errorMessage, updateImage, onSubmit, fieldValues, errors } =
-    useSignUp();
+  const { isMutating, image, updateImage, onSubmit, fieldValues, errors } = useSignUp();
 
   return (
     <FormWrapper title='Sign Up'>
@@ -59,7 +57,6 @@ export const SignUpForm: FC = memo(() => {
           type='password'
           placeholder='password'
         />
-        <ErrorMessage errorMessage={errorMessage} className='text-center' testId='errorMessage' />
 
         <SubmitButton className='mt-2' color='primary' value='Sign Up' isLoading={isMutating} />
 

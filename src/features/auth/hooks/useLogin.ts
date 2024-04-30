@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -8,8 +8,6 @@ import { LoginDto } from '$/types/auth';
 import { convert, resolve } from '@/utils';
 
 import { useLoginMutation } from '../api';
-
-type ErrorMessage = string | undefined;
 
 const schema = z
   .object({
@@ -22,8 +20,6 @@ const schema = z
   }) satisfies z.ZodType<LoginDto>;
 
 export const useLogin = () => {
-  // サーバーからのエラーメッセージを表示するためのステート
-  const [errorMessage, setErrorMessage] = useState<ErrorMessage>('');
   const { trigger: login, isMutating } = useLoginMutation();
 
   const {
@@ -38,7 +34,6 @@ export const useLogin = () => {
 
   return {
     isMutating,
-    errorMessage,
     onSubmit: originalHandleSubmit(handleSubmit),
     fieldValues: {
       email: convert(register('email')),

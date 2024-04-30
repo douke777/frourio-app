@@ -11,9 +11,6 @@ type Props = {
   posts: PostWithDetails[];
 };
 export const PaginatedPostList: FC<Props> = memo(({ posts }) => {
-  // TODO: search, category/[slug]で修正
-  // const router = useRouter();
-  // const { asPath } = useRouter();
   const [offset, setOffset] = useState<number>(0);
   const [slice, setSlice] = useState<Array<PostWithDetails>>([]);
   const [perPage] = useState<number>(6);
@@ -34,7 +31,6 @@ export const PaginatedPostList: FC<Props> = memo(({ posts }) => {
       setPageCount(Math.ceil(posts.length / perPage));
     }
   }, [offset, perPage, posts]);
-  // }, [offset, router.query, perPage, asPath, posts]);
 
   let content;
   if (posts.length) {
