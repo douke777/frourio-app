@@ -1,4 +1,4 @@
-import { upsertProfileDto, userFactory } from '$/__test__/factories';
+import { upsertProfileDto, userWithProfileFactory } from '$/__test__/factories';
 import { UserWithProfile } from '$/types';
 
 import { getUserWithProfile, upsertProfile } from '.';
@@ -11,7 +11,7 @@ describe('getUserWithProfile', () => {
   let userWithProfile: UserWithProfile;
 
   beforeEach(async () => {
-    userWithProfile = await userFactory(prisma);
+    userWithProfile = await userWithProfileFactory(prisma);
   });
 
   it('Success', async () => {
@@ -27,7 +27,7 @@ describe('upsertProfile', () => {
   let userWithProfile: UserWithProfile;
 
   beforeEach(async () => {
-    userWithProfile = await userFactory(prisma);
+    userWithProfile = await userWithProfileFactory(prisma);
   });
 
   it('Success', async () => {

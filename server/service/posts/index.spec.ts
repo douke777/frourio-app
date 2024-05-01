@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { Post } from '@prisma/client';
 
-import { postFactory, userFactory } from '$/__test__/factories';
+import { postFactory, userWithProfileFactory } from '$/__test__/factories';
 import { PostWithDetails, UserWithProfile } from '$/types';
 
 import { createPost, deletePost, getPostById } from '.';
@@ -38,7 +38,7 @@ describe('createPost', () => {
   let user: UserWithProfile;
 
   beforeEach(async () => {
-    user = await userFactory(prisma);
+    user = await userWithProfileFactory(prisma);
   });
 
   it('Success', async () => {

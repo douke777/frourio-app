@@ -1,5 +1,7 @@
 import { faker } from '@faker-js/faker';
 
+import { SafeUser, UserWithProfile } from '$/types';
+
 import { JestPrisma } from '../types/prisma';
 
 export const userData = {
@@ -13,7 +15,19 @@ export const userData = {
   },
 };
 
-export const userFactory = async (prisma: JestPrisma) => {
+export const userFactory = async (prisma: JestPrisma): Promise<SafeUser> => {
+  return await prisma.user.create({
+    data: { ...userData },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      image: true,
+    },
+  });
+};
+
+export const userWithProfileFactory = async (prisma: JestPrisma): Promise<UserWithProfile> => {
   return await prisma.user.create({
     data: { ...userData },
     select: {

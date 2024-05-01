@@ -1,5 +1,7 @@
 import { faker } from '@faker-js/faker';
 
+import { PostWithDetails } from '$/types';
+
 import { userFactory } from './user';
 import { JestPrisma } from '../types/prisma';
 
@@ -10,7 +12,7 @@ export const postData = {
   categorySlug: 'programming',
 };
 
-export const postFactory = async (prisma: JestPrisma) => {
+export const postFactory = async (prisma: JestPrisma): Promise<PostWithDetails> => {
   const user = await userFactory(prisma);
 
   return await prisma.post.create({
