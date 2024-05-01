@@ -1,8 +1,9 @@
-import { Category, Post, User } from '@prisma/client';
+import { Category } from '@prisma/client';
 import { ResultAsync, errAsync, okAsync } from 'neverthrow';
 import { depend } from 'velona';
 
 import { Err, NotFoundError } from '$/lib/error';
+import { CategoryWithDetails } from '$/types/categories';
 
 import { prisma, handlePrismaError } from '..';
 
@@ -21,17 +22,7 @@ export const getCategories = depend({ prisma }, ({ prisma }): ResultAsync<Catego
 
 export const getCategoryById = depend(
   { prisma },
-  (
-    { prisma },
-    id: Category['id'],
-  ): ResultAsync<
-    Category & {
-      posts: (Post & {
-        author: User;
-      })[];
-    },
-    Err
-  > => {
+  ({ prisma }, id: Category['id']): ResultAsync<CategoryWithDetails, Err> => {
     return ResultAsync.fromPromise(
       prisma.category.findUniqueOrThrow({
         where: {
@@ -40,7 +31,13 @@ export const getCategoryById = depend(
         include: {
           posts: {
             include: {
-              author: true,
+              author: {
+                select: {
+                  id: true,
+                  name: true,
+                  image: true,
+                },
+              },
             },
           },
         },
