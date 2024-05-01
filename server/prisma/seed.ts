@@ -2,7 +2,7 @@ import { Prisma, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-const categoryData: Prisma.CategoryCreateInput[] = [
+export const categoryData: Prisma.CategoryCreateInput[] = [
   { slug: 'programming' },
   { slug: 'marketing' },
   { slug: 'business' },
