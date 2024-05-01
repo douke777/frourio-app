@@ -1,4 +1,4 @@
-import { EditingUserWithProfile, UserWithProfile } from '$/types/profiles';
+import { UpsertProfileDto, UserWithProfile } from '$/types/profiles';
 
 import type { DefineMethods } from 'aspida';
 
@@ -7,6 +7,6 @@ export type Methods = DefineMethods<{
     resBody: UserWithProfile;
   };
   post: {
-    reqBody: EditingUserWithProfile;
+    reqBody: UpsertProfileDto;
   };
 }>;

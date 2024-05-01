@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 
-export type EditingUserWithProfile = {
+export type UpsertProfileDto = {
   name: string;
   bio: string | null;
 };

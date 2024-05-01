@@ -3,7 +3,7 @@ import { ResultAsync } from 'neverthrow';
 import { depend } from 'velona';
 
 import { Err } from '$/lib/error';
-import { EditingUserWithProfile, UserWithProfile } from '$/types/profiles';
+import { UpsertProfileDto, UserWithProfile } from '$/types/profiles';
 
 import { prisma, handlePrismaError } from '..';
 
@@ -34,11 +34,7 @@ export const getUserWithProfile = depend(
 
 export const upsertProfile = depend(
   { prisma },
-  (
-    { prisma },
-    userId: User['id'],
-    dto: EditingUserWithProfile,
-  ): ResultAsync<UserWithProfile, Err> => {
+  ({ prisma }, userId: User['id'], dto: UpsertProfileDto): ResultAsync<UserWithProfile, Err> => {
     return ResultAsync.fromPromise(
       prisma.user.update({
         where: {
