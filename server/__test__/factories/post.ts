@@ -15,5 +15,20 @@ export const postFactory = async (prisma: JestPrisma) => {
 
   return await prisma.post.create({
     data: { ...postData, authorId: user.id },
+    include: {
+      category: {
+        select: {
+          id: true,
+          slug: true,
+        },
+      },
+      author: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+        },
+      },
+    },
   });
 };

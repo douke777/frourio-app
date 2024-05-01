@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker';
 import { Post, User } from '@prisma/client';
 
 import { postFactory, userFactory } from '$/__test__/factories';
+import { PostWithDetails } from '$/types';
 
 import { createPost, deletePost, getPostById } from '.';
 
@@ -10,7 +11,7 @@ const prisma = jestPrisma.client;
 describe('getPostById', () => {
   const injectedGetPostById = getPostById.inject({ prisma });
 
-  let post: Post;
+  let post: PostWithDetails;
 
   beforeEach(async () => {
     post = await postFactory(prisma);
