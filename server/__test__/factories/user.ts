@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 
 import { SafeUser, UserWithProfile } from '$/types';
+import { hashPassword } from '$/utils/auth';
 
 import { JestPrisma } from '../types/prisma';
 
@@ -16,8 +17,10 @@ export const userData = {
 };
 
 export const userFactory = async (prisma: JestPrisma): Promise<SafeUser> => {
+  const hashedPassword = await hashPassword(userData.password);
+
   return await prisma.user.create({
-    data: { ...userData },
+    data: { ...userData, password: hashedPassword },
     select: {
       id: true,
       name: true,
@@ -28,8 +31,10 @@ export const userFactory = async (prisma: JestPrisma): Promise<SafeUser> => {
 };
 
 export const userWithProfileFactory = async (prisma: JestPrisma): Promise<UserWithProfile> => {
+  const hashedPassword = await hashPassword(userData.password);
+
   return await prisma.user.create({
-    data: { ...userData },
+    data: { ...userData, password: hashedPassword },
     select: {
       id: true,
       name: true,
