@@ -7,7 +7,7 @@ const prisma = jestPrisma.client;
 describe('getCategories', () => {
   const injectedGetCategories = getCategories.inject({ prisma });
 
-  it('Success', async () => {
+  it('returns all categories', async () => {
     const result = await injectedGetCategories();
 
     expect(result._unsafeUnwrap().length).toEqual(categoryData.length);
@@ -17,7 +17,7 @@ describe('getCategories', () => {
 describe('getCategoryById', () => {
   const injectedGetCategoryById = getCategoryById.inject({ prisma });
 
-  it('Success', async () => {
+  it('returns a category with posts and their authors', async () => {
     const result = await injectedGetCategoryById(1);
     const category = result._unsafeUnwrap();
 

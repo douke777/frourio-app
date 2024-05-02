@@ -1,8 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { Post } from '@prisma/client';
 
 import { postFactory, userWithProfileFactory } from '$/__test__/factories';
-import { PostWithDetails, UserWithProfile } from '$/types';
 
 import { createPost, deletePost, getPostById } from '.';
 
@@ -11,19 +9,14 @@ const prisma = jestPrisma.client;
 describe('getPostById', () => {
   const injectedGetPostById = getPostById.inject({ prisma });
 
-  let post: PostWithDetails;
-
-  beforeEach(async () => {
-    post = await postFactory(prisma);
-  });
-
-  it('Success', async () => {
+  it('returns the correct post when given a valid id', async () => {
+    const post = await postFactory(prisma);
     const result = await injectedGetPostById(post.id);
 
     expect(result._unsafeUnwrap()).toEqual(post);
   });
 
-  it('NotFoundError', async () => {
+  it('throws NotFoundError when given a non-existent id', async () => {
     const maxId = await prisma.post.findFirst({ select: { id: true }, orderBy: { id: 'desc' } });
     const nonExistentId = (maxId?.id ?? 0) + 1;
     const result = await injectedGetPostById(nonExistentId);
@@ -35,13 +28,8 @@ describe('getPostById', () => {
 describe('createPost', () => {
   const injectedCreatePost = createPost.inject({ prisma });
 
-  let user: UserWithProfile;
-
-  beforeEach(async () => {
-    user = await userWithProfileFactory(prisma);
-  });
-
-  it('Success', async () => {
+  it('creates a post with the given data', async () => {
+    const user = await userWithProfileFactory(prisma);
     const authorId = user.id;
     const data = {
       title: faker.lorem.word(),
@@ -59,23 +47,17 @@ describe('createPost', () => {
 describe('deletePost', () => {
   const injectedDeletePost = deletePost.inject({ prisma });
 
-  let post: Post;
-
-  beforeEach(async () => {
-    post = await postFactory(prisma);
-  });
-
-  it('Success', async () => {
+  it('deletes the post with the given id', async () => {
+    const post = await postFactory(prisma);
     const result = await injectedDeletePost(post.authorId, post.id);
 
     expect(result._unsafeUnwrap().title).toEqual(post.title);
   });
 
-  describe('authorId is incorrect', () => {
-    it('BadRequestError', async () => {
-      const result = await injectedDeletePost(post.authorId + 1, post.id);
+  it('throws BadRequestError when given an incorrect authorId', async () => {
+    const post = await postFactory(prisma);
+    const result = await injectedDeletePost(post.authorId + 1, post.id);
 
-      expect(result._unsafeUnwrapErr().constructor.name).toBe('BadRequestError');
-    });
+    expect(result._unsafeUnwrapErr().constructor.name).toBe('BadRequestError');
   });
 });
