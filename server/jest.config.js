@@ -4,6 +4,7 @@ module.exports = {
   testEnvironment: '@quramy/jest-prisma/environment',
   moduleNameMapper: {
     '^\\$/(.*)$': '<rootDir>/$1',
+    '^api/(.*)$': '<rootDir>/api/$1',
   },
   silent: false,
 };
