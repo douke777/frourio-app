@@ -7,7 +7,7 @@
     "dev": "run-p dev:*",
     "dev:server": "ts-node-dev --respawn -r tsconfig-paths/register index.ts",
     "dev:frourio": "frourio --watch",
-    "build": "tsc -p tsconfig.json && cp -R public dist",
+    "build": "frourio && tsc -p tsconfig.json && cp -R public dist",
     "start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/index.js",
     "test": "dotenv -e .env.test -- jest",
     "migrate:test": "dotenv -e .env.test -- prisma migrate reset -f"
