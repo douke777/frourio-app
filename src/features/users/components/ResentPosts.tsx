@@ -4,10 +4,10 @@ import { PostList } from '@/features/posts/components/List';
 
 import { ConstMessage } from '@/components/Element/Const';
 
-import { UserWithDetails } from '$/types';
+import { Post } from '$/types';
 
 type Props = {
-  posts: UserWithDetails['posts'];
+  posts: Post[];
 };
 
 export const ResentPosts: FC<Props> = ({ posts }) => {

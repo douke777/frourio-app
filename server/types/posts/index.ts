@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, Post as PrismaPost } from '@prisma/client';
 
 export type CreatingPost = {
   title: string;
@@ -28,3 +28,5 @@ export type PostWithDetails = Prisma.PostGetPayload<{
     };
   };
 }>;
+
+export type Post = PrismaPost;

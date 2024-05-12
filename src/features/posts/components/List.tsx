@@ -1,11 +1,11 @@
 import { FC, memo } from 'react';
 
-import { PostWithDetails } from '$/types';
+import { Post } from '$/types';
 
 import { PostItem } from './Item';
 
 type Props = {
-  posts: PostWithDetails[];
+  posts: Post[];
   className?: string;
 };
 

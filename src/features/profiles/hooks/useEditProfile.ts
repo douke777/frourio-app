@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { EditingUserWithProfile } from '$/types/profiles';
+import { UpsertProfileDto } from '$/types/profiles';
 import { convert, resolve } from '@/utils';
 
 import { useGetUserWithProfileQuery, useUpsertProfileMutation } from '../api';
@@ -12,7 +12,7 @@ import { useGetUserWithProfileQuery, useUpsertProfileMutation } from '../api';
 const schema = z.object({
   name: z.string().min(1),
   bio: z.string().nullable(),
-}) satisfies z.ZodType<EditingUserWithProfile>;
+}) satisfies z.ZodType<UpsertProfileDto>;
 
 export const useEditProfile = () => {
   const { data } = useGetUserWithProfileQuery();
@@ -23,7 +23,7 @@ export const useEditProfile = () => {
     handleSubmit: originalHandleSubmit,
     formState: { errors },
     reset,
-  } = useForm<EditingUserWithProfile>({
+  } = useForm<UpsertProfileDto>({
     resolver: zodResolver(schema),
     defaultValues: {
       name: data.name,
@@ -38,7 +38,7 @@ export const useEditProfile = () => {
     });
   }, [data, reset]);
 
-  const handleSubmit: SubmitHandler<EditingUserWithProfile> = useCallback(
+  const handleSubmit: SubmitHandler<UpsertProfileDto> = useCallback(
     async (data) => upsertProfile(data),
     [upsertProfile],
   );

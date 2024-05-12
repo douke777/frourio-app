@@ -4,15 +4,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { CreatingPost, PostWithDetails } from '$/types';
+import { CreatingPost } from '$/types';
 import { convert, resolve } from '@/utils';
 
 import { useCreatePostMutation } from '../api';
 
-type Props = {
-  type: 'CREATE' | 'UPDATE';
-  post?: PostWithDetails;
-};
+// type Props = {
+//   type: 'CREATE' | 'UPDATE';
+//   post?: PostWithDetails;
+// };
 
 const schema = z.object({
   title: z.string().min(1).max(50),

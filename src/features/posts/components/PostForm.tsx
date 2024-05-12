@@ -13,9 +13,7 @@ type Props = {
 };
 
 export const PostForm: FC<Props> = ({ type }) => {
-  const { isMutating, onSubmit, fieldValues, errors } = usePost({
-    type,
-  });
+  const { isMutating, onSubmit, fieldValues, errors } = usePost();
 
   const { data: categories } = useGetCategoriesQuery();
 

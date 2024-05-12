@@ -19,6 +19,7 @@ import { Layout } from '@/components/Layout/Layout';
 
 import useStore from './stores/session';
 
+// @ts-ignore
 import routes from '~react-pages'; // NOTE: filebased routingを行うために、pages/はdefault exportが必要
 
 const ErrorFallback = () => {

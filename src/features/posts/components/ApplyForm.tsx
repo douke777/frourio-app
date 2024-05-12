@@ -25,7 +25,12 @@ export const ApplyForm: FC<Props> = memo(({ post }) => {
           />
         </div>
 
-        <SubmitButton className='mt-2 items-center' color='primary' value='Send Message' />
+        <SubmitButton
+          className='mt-2 items-center'
+          color='primary'
+          value='Send Message'
+          isLoading={false}
+        />
       </form>
     </>
   );

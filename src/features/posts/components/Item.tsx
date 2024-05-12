@@ -5,12 +5,12 @@ import { faFolder } from '@fortawesome/free-solid-svg-icons';
 
 import { Icon } from '@/components/Element/Icon';
 
-import { PostWithDetails } from '$/types';
+import { Post } from '$/types';
 
 import styles from './Item.module.css';
 
 type Props = {
-  post: PostWithDetails;
+  post: Post;
 };
 
 export const PostItem: FC<Props> = memo(({ post }) => {

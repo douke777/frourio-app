@@ -3,6 +3,7 @@ import fastifyCors from '@fastify/cors';
 import fastifyCsrf from '@fastify/csrf-protection';
 import fastifyJwt from '@fastify/jwt';
 import fastify from 'fastify';
+import fastifyStatic from 'fastify-static';
 
 import server from './$server';
 
@@ -39,6 +40,7 @@ app.register(fastifyCsrf, {
     path: '/',
   },
 });
+app.register();
 
 server(app);
 
