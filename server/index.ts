@@ -9,6 +9,9 @@ import fastify from 'fastify';
 
 import server from './$server';
 
+const PORT = parseInt(process.env.PORT || '8888', 10);
+const HOST = process.env.HOST || '0.0.0.0';
+
 const app = fastify({
   logger: {
     transport: {
@@ -53,4 +56,4 @@ app.setNotFoundHandler((_, reply) => {
   reply.sendFile('index.html');
 });
 
-app.listen({ port: 8888, host: '0.0.0.0' });
+app.listen({ port: PORT, host: HOST });
