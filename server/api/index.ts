@@ -1,9 +1,4 @@
 import { DefineMethods } from 'aspida';
 
-export type Methods = DefineMethods<{
-  get: {
-    resBody: {
-      hello: string;
-    };
-  };
-}>;
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type Methods = DefineMethods<{}>;

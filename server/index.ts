@@ -1,9 +1,11 @@
+import path from 'path';
+
 import fastifyCookie from '@fastify/cookie';
 import fastifyCors from '@fastify/cors';
 import fastifyCsrf from '@fastify/csrf-protection';
 import fastifyJwt from '@fastify/jwt';
+import fastifyStatic from '@fastify/static';
 import fastify from 'fastify';
-import fastifyStatic from 'fastify-static';
 
 import server from './$server';
 
@@ -40,8 +42,15 @@ app.register(fastifyCsrf, {
     path: '/',
   },
 });
-app.register();
+app.register(fastifyStatic, {
+  root: path.join(__dirname, './public'),
+  wildcard: false,
+});
 
-server(app);
+server(app, { basePath: '/api' });
+
+app.setNotFoundHandler((_, reply) => {
+  reply.sendFile('index.html');
+});
 
 app.listen({ port: 8888, host: '0.0.0.0' });

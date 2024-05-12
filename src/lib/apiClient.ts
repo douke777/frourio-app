@@ -4,6 +4,6 @@ import axios from 'axios';
 import api from '$/api/$api';
 
 axios.defaults.withCredentials = true;
-export const apiClient = api(aspida(axios, { baseURL: 'http://localhost:8888' }));
+export const apiClient = api(aspida(axios, { baseURL: 'http://localhost:8888/api' }));
 
 export default apiClient;

@@ -12,7 +12,6 @@ import hooksFn_17843s1 from 'api/profiles/hooks';
 import validatorsFn_1ln2ulj from 'api/categories/_categoryId/validators';
 import validatorsFn_15if2po from 'api/posts/_postId/validators';
 import validatorsFn_1p3f06i from 'api/users/_userId/validators';
-import controllerFn_1qxyj9s from 'api/controller';
 import controllerFn_8myref from 'api/auth/controller';
 import controllerFn_1n5xz46 from 'api/auth/csrf/controller';
 import controllerFn_q9g69d from 'api/auth/login/controller';
@@ -21,7 +20,6 @@ import controllerFn_wrryh8 from 'api/auth/signup/controller';
 import controllerFn_1zjx1j from 'api/auth/verify/controller';
 import controllerFn_1qdo4lx from 'api/categories/controller';
 import controllerFn_1chl5mw from 'api/categories/_categoryId/controller';
-import controllerFn_1c8eilo from 'api/hi/controller';
 import controllerFn_pcjixt from 'api/likes/controller';
 import controllerFn_1fkamk4 from 'api/posts/controller';
 import controllerFn_3izadp from 'api/posts/category/controller';
@@ -185,7 +183,6 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   const validators_1ln2ulj = validatorsFn_1ln2ulj(fastify);
   const validators_15if2po = validatorsFn_15if2po(fastify);
   const validators_1p3f06i = validatorsFn_1p3f06i(fastify);
-  const controller_1qxyj9s = controllerFn_1qxyj9s(fastify);
   const controller_8myref = controllerFn_8myref(fastify);
   const controller_1n5xz46 = controllerFn_1n5xz46(fastify);
   const controller_q9g69d = controllerFn_q9g69d(fastify);
@@ -194,7 +191,6 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   const controller_1zjx1j = controllerFn_1zjx1j(fastify);
   const controller_1qdo4lx = controllerFn_1qdo4lx(fastify);
   const controller_1chl5mw = controllerFn_1chl5mw(fastify);
-  const controller_1c8eilo = controllerFn_1c8eilo(fastify);
   const controller_pcjixt = controllerFn_pcjixt(fastify);
   const controller_1fkamk4 = controllerFn_1fkamk4(fastify);
   const controller_3izadp = controllerFn_3izadp(fastify);
@@ -204,14 +200,6 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
   const controller_xfo7hf = controllerFn_xfo7hf(fastify);
   const controller_1xegfg1 = controllerFn_1xegfg1(fastify);
   const controller_15x3ppx = controllerFn_15x3ppx(fastify);
-
-  fastify.get(
-    basePath || '/',
-    {
-      preParsing: hooks_1m6qgto.preParsing,
-    },
-    methodToHandler(controller_1qxyj9s.get),
-  );
 
   fastify.get(
     `${basePath}/auth`,
@@ -283,14 +271,6 @@ export default (fastify: FastifyInstance, options: FrourioOptions = {}) => {
       preParsing: hooks_1m6qgto.preParsing,
     },
     asyncMethodToHandler(controller_1chl5mw.get),
-  );
-
-  fastify.get(
-    `${basePath}/hi`,
-    {
-      preParsing: hooks_1m6qgto.preParsing,
-    },
-    methodToHandler(controller_1c8eilo.get),
   );
 
   fastify.get(
