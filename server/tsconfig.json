@@ -18,8 +18,8 @@
     "paths": {
       "$/*": ["*"]
     },
-    "types": ["@types/jest", "@quramy/jest-prisma"]
+    "types": ["@types/jest", "@quramy/jest-prisma", "jest"]
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules", "__test__/**/*.ts", "**/*.spec.ts", "src/**/*.ts"]
+  "exclude": ["node_modules", "src/**/*.ts"]
 }
